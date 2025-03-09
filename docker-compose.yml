@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # 演習で構築するマイクロサービス
+  backend_service:
+    build:
+      context: ./ 
+      dockerfile: Dockerfile
+    container_name: "backend_service"
+    ports:
+      - "24040:24040" # RESTfull API
+      #- "25050:25050" # gRPC API
+    volumes:
+      - ./exercise:/app/exercise
+    working_dir: /app/exercise
+    tty: true
+    stdin_open: true
+    depends_on:
+      - ts_exercise_db
+      - tsdb_admin
+    networks:
+      - ts-exercise-net
+# 演習用データベースコンテナ(MySQL8.1)
+  ts_exercise_db:
+    image: mysql:8.1
+    container_name: "ts_exercise_db"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: exercise_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      TZ: 'Asia/Tokyo'
+    ports:
+      - 4306:3306
+    volumes:
+      - ts-exercise-data:/var/lib/mysql
+      - ./init.d/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init.d/my.cnf:/etc/mysql/my.cnf     
+    networks:
+      - ts-exercise-net
+# PHPMyAdmin　データベース管理ツール
+  tsdb_admin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: "tsdb_admin"
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: ts_exercise_db
+      PMA_USER: root
+      PMA_PASSWORD: root
+      PMA_CHARSET: utf8mb4
+    ports:
+      - "4080:80"
+    depends_on:
+      - ts_exercise_db
+    networks:
+      - ts-exercise-net
+    restart: always
+
+networks:
+  ts-exercise-net:
+    driver: bridge
+
+volumes:
+  ts-exercise-data:

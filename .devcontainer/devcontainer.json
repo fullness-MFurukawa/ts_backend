@@ -1,0 +1,21 @@
+{
+    "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
+    "name": "TypeScript BackEndService Exercise Project",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "backend_service",
+    "workspaceFolder": "/app/exercise",
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "ms-vscode.vscode-typescript-next",
+          "dbaeumer.vscode-eslint"
+        ],
+        "settings": {
+          "typescript.tsdk": "/root/.npm-global/lib/node_modules/typescript/lib"
+        }
+      }
+    },
+    "postCreateCommand": "ln -sf /app/exercise/dist/src/main.js /app/exercise/main.js",
+    "remoteUser": "node"
+  }
+  
