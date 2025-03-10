@@ -3,7 +3,6 @@
     "version": "1.0.0",
     "description": "Minimal NestJS MicroService Examples",
     "main": "dist/main.js",
-    "type": "module",
     "scripts": {
         "build": "nest build",
         "start": "node dist/main.js"

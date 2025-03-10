@@ -1,5 +1,5 @@
 import * as uuid from 'uuid';
-import { DomainException } from "../../exception/DomainException.js";
+import { DomainException } from "../../exception/DomainException";
 /**
  * 商品を一意に識別するための値オブジェクト
  * 不変性を持ち、妥当性検証を内部で行う

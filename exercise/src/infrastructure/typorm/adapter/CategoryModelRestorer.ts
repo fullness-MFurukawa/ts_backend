@@ -1,9 +1,10 @@
-import { Restorer } from "@/shared/adapter/Restorer.js";
 import { Injectable } from "@nestjs/common";
-import { CategoryModel } from "../model/CategoryModel.js";
-import { Category } from "@/application/domain/models/category/Category.js";
-import { CategoryId } from "@/application/domain/models/category/CategoryId.js";
-import { CategoryName } from "@/application/domain/models/category/CategoryName.js";
+import { Restorer } from "@src/shared/adapter/Restorer";
+import { CategoryModel } from "../model/CategoryModel";
+import { Category } from "@src/application/domain/model/category/Category";
+import { CategoryId } from "@src/application/domain/model/category/CategoryId";
+import { CategoryName } from "@src/application/domain/model/category/CategoryName";
+
 
 /**
  * CategoryModelからCategoryエンティティを復元する

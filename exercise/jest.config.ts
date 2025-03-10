@@ -1,19 +1,20 @@
-// ts-jestのモジュール名をマッピングするためのユーティリティをインポート
-import { pathsToModuleNameMapper } from 'ts-jest';
-// TypeScriptのコンパイルオプションをインポート
-import { compilerOptions } from './tsconfig.json';
+import { pathsToModuleNameMapper } from "ts-jest";
+import { readFileSync } from "fs";
+import { join } from "path";
+
+// tsconfig.json を読み込む
+const tsconfig = JSON.parse(readFileSync(join(__dirname, "tsconfig.json"), "utf8"));
 
 export default {
-  preset: 'ts-jest', // TypeScriptを扱うためのJestプリセットを指定
-  testEnvironment: 'node',// テストをNode.js環境で実行する設定
-  rootDir: '.',// プロジェクトのルートディレクトリを指定
-  // TypeScriptのパスエイリアスをJestで解釈可能にするためのマッピング
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, {
-    prefix: '<rootDir>/', // ルートディレクトリを基準にしたパスを解釈するためのプレフィックス
-  }),
-  transform: {
-    '^.+\\.tsx?$': 'ts-jest',// TypeScriptファイル（.tsや.tsx）をts-jestを使ってトランスパイル
+  preset: "ts-jest",
+  testEnvironment: "node",
+  rootDir: ".",
+  moduleNameMapper: {
+    ...pathsToModuleNameMapper(tsconfig.compilerOptions.paths, { prefix: "<rootDir>/" })
   },
-  // モジュール検索時に探索するディレクトリを指定
-  moduleDirectories: ['node_modules', '<rootDir>'],// node_modulesとプロジェクトルートを検索
+  transform: {
+    "^.+\\.tsx?$": "ts-jest"
+  },
+  moduleDirectories: ["node_modules", "<rootDir>"],
 };
+

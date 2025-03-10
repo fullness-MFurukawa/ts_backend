@@ -1,11 +1,13 @@
-import { CategoryRepository } from "@/application/out/repository/CategoryRepository.js";
 import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { EntityManager, Repository } from "typeorm";
-import { CategoryModel } from "../model/CategoryModel.js";
-import { Restorer } from "@/shared/adapter/Restorer.js";
-import { Category } from "@/application/domain/models/category/Category.js";
-import { CategoryId } from "@/application/domain/models/category/CategoryId.js";
+import { CategoryModel } from "../model/CategoryModel";
+import { Restorer } from "@src/shared/adapter/Restorer";
+import { Category } from "@src/application/domain/model/category/Category";
+import { CategoryId } from "@src/application/domain/model/category/CategoryId";
+import { CategoryRepository } from "@src/application/out/repository/CategoryRepository";
+
+
 
 /**
  * Categoryエンティティのリポジトリインターフェイス実装

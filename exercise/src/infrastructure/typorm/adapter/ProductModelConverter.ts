@@ -1,8 +1,8 @@
-import { Converter } from "@/shared/adapter/Converter.js";
 import { Inject, Injectable } from "@nestjs/common";
-import { ProductModel } from "../model/ProductModel.js";
-import { Product } from "@/application/domain/models/product/Product.js";
-import { CategoryModelConverter } from "./CategoryModelConverter.js";
+import { Product } from "@src/application/domain/model/product/Product";
+import { Converter } from "@src/shared/adapter/Converter";
+import { ProductModel } from "../model/ProductModel";
+import { CategoryModelConverter } from "./CategoryModelConverter";
 
 /**
  * ProductエンティティをProductModelへ変換する

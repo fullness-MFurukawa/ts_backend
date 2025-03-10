@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
-import { InfrastructureModule } from "./infrastructure/InfrastructureModule.js";
+import { InfrastructureModule } from "./infrastructure/InfrastructureModule";
+
 
 /**
  * アプリケーション全体のモジュール定義

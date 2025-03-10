@@ -1,4 +1,4 @@
-import { DomainException } from "../../exception/DomainException.js";
+import { DomainException } from "../../exception/DomainException";
 
 /**
  * 商品名を表す値オブジェクト

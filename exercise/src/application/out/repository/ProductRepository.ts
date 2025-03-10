@@ -1,6 +1,7 @@
-import { Product } from "@/application/domain/models/product/Product.js";
-import { ProductId } from "@/application/domain/models/product/ProductId.js";
-import { ProductName } from "@/application/domain/models/product/ProductName.js";
+import { Product } from "@src/application/domain/model/product/Product";
+import { ProductId } from "@src/application/domain/model/product/ProductId";
+import { ProductName } from "@src/application/domain/model/product/ProductName";
+
 
 /**
  * Productエンティティのリポジトリインターフェイス

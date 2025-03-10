@@ -1,7 +1,7 @@
-import { Category } from "@/application/domain/models/category/Category.js";
-import { Converter } from "@/shared/adapter/Converter.js";
-import { CategoryModel } from "../model/CategoryModel.js";
 import { Injectable } from "@nestjs/common";
+import { Category } from "@src/application/domain/model/category/Category";
+import { Converter } from "@src/shared/adapter/Converter";
+import { CategoryModel } from "../model/CategoryModel";
 
 /**
  * CategoryエンティティをCategoryModelに変換

@@ -1,7 +1,7 @@
-import { Category } from "../category/Category.js";
-import { ProductId } from "./ProductId.js";
-import { ProductName } from "./ProductName.js";
-import { ProductPrice } from "./ProductPrice.js";
+import { Category } from "../category/Category";
+import { ProductId } from "./ProductId";
+import { ProductName } from "./ProductName";
+import { ProductPrice } from "./ProductPrice";
 
 /**
  * 商品を表すエンティティ

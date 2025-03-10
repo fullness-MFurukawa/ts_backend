@@ -1,5 +1,5 @@
 import * as uuid from 'uuid';
-import { CategoryId } from '@/src/application/domain/model/category/CategoryId';
+import { CategoryId } from "@src/application/domain/model/category/CategoryId";
 /**
  * CategoryIdクラスの単体テストドライバ
  * [テスト実行コマンド]

@@ -1,5 +1,5 @@
-import { CategoryId } from "./CategoryId.js";
-import { CategoryName } from "./CategoryName.js";
+import { CategoryId } from "./CategoryId";
+import { CategoryName } from "./CategoryName";
 
 /**
  * 商品カテゴリを表すエンティティクラス

@@ -6,7 +6,7 @@ import {
     PrimaryGeneratedColumn, 
     Unique } 
 from "typeorm";
-import { CategoryModel } from "./CategoryModel.js";
+import { CategoryModel } from "./CategoryModel";
 
 /**
  * productテーブルにマッピングされるエンティティクラス

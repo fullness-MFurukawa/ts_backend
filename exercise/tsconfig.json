@@ -1,25 +1,26 @@
 {
-    "compilerOptions": {
-      "target": "ES2020",
-      "module": "NodeNext",
-      "moduleResolution": "NodeNext",
-      "outDir": "./dist",
-      "rootDir": "./src",
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "esModuleInterop": true,
-      "allowSyntheticDefaultImports": true,
-      "forceConsistentCasingInFileNames": true,
-      "strict": true,
-      "strictPropertyInitialization": false,
-      "skipLibCheck": true,
-      "types": ["jest", "node", "uuid"],
-      "baseUrl": "./",
-      "paths": {
-        "@src/*": ["src/*"],
-      },
-      "resolveJsonModule": true
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./dist",
+    "rootDir": ".",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["jest", "node", "uuid"],
+    "baseUrl": "./",
+    "paths": {
+      "@src/*": ["src/*"] 
     },
-    "include": ["src/**/*", "test/**/*"],
-    "exclude": ["node_modules", "dist", "**/*.spec.ts"]
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

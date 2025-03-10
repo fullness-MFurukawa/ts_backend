@@ -1,11 +1,12 @@
-import { Restorer } from "@/shared/adapter/Restorer.js";
 import { Inject, Injectable } from "@nestjs/common";
-import { ProductModel } from "../model/ProductModel.js";
-import { Product } from "@/application/domain/models/product/Product.js";
-import { CategoryModelRestorer } from "./CategoryModelRestorer.js";
-import { ProductId } from "@/application/domain/models/product/ProductId.js";
-import { ProductName } from "@/application/domain/models/product/ProductName.js";
-import { ProductPrice } from "@/application/domain/models/product/ProductPrice.js";
+import { Restorer } from "@src/shared/adapter/Restorer";
+import { ProductModel } from "../model/ProductModel";
+import { Product } from "@src/application/domain/model/product/Product";
+import { CategoryModelRestorer } from "./CategoryModelRestorer";
+import { ProductId } from "@src/application/domain/model/product/ProductId";
+import { ProductName } from "@src/application/domain/model/product/ProductName";
+import { ProductPrice } from "@src/application/domain/model/product/ProductPrice";
+
 
 /**
  * ProductModelからProductエンティティを復元する

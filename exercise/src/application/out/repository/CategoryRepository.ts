@@ -1,5 +1,5 @@
-import { Category } from "@/application/domain/models/category/Category.js";
-import { CategoryId } from "@/application/domain/models/category/CategoryId.js";
+import { Category } from "@src/application/domain/model/category/Category";
+import { CategoryId } from "@src/application/domain/model/category/CategoryId";
 
 /**
  * Categoryエンティティのリポジトリインターフェイス

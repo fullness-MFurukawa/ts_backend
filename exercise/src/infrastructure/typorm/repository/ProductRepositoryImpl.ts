@@ -1,13 +1,13 @@
-import { ProductRepository } from "@/application/out/repository/ProductRepository.js";
 import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { ProductRepository } from "@src/application/out/repository/ProductRepository";
 import { EntityManager, Like, Repository } from "typeorm";
-import { ProductModel } from "../model/ProductModel.js";
-import { Converter } from "@/shared/adapter/Converter.js";
-import { Restorer } from "@/shared/adapter/Restorer.js";
-import { Product } from "@/application/domain/models/product/Product.js";
-import { ProductId } from "@/application/domain/models/product/ProductId.js";
-import { ProductName } from "@/application/domain/models/product/ProductName.js";
+import { ProductModel } from "../model/ProductModel";
+import { Converter } from "@src/shared/adapter/Converter";
+import { Product } from "@src/application/domain/model/product/Product";
+import { Restorer } from "@src/shared/adapter/Restorer";
+import { ProductId } from "@src/application/domain/model/product/ProductId";
+import { ProductName } from "@src/application/domain/model/product/ProductName";
 
 /**
  * Productエンティティのリポジトリインターフェイス実装

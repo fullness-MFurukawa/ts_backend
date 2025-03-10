@@ -4,7 +4,8 @@ import {    Column ,
     PrimaryGeneratedColumn, 
     Unique } 
 from "typeorm";
-import { ProductModel } from "./ProductModel.js";
+import { ProductModel } from "./ProductModel";
+
 /**
  * categoryテーブルにマッピングされるエンティティクラス
  * @author Fullness,Inc.
