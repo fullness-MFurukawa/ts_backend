@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const common_1 = require("@nestjs/common");
-const logger = new common_1.Logger("Main");
+import { Logger } from "@nestjs/common";
+const logger = new Logger("Main");
 async function bootstrap() {
     logger.log("サービスを起動します...");
     logger.warn("これは警告メッセージです");

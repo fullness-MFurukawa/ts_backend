@@ -21,9 +21,6 @@ RUN mkdir -p /home/node/.npm-global \
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 ENV PATH="/home/node/.npm-global/bin:$PATH"
 
-# TypeScriptとts-protoをグローバルにインストール
-RUN npm install -g typescript ts-proto
-
 # 作業ディレクトリを作成
 WORKDIR /app/exercise
 
@@ -33,15 +30,20 @@ COPY --chown=node:node ./exercise /app/exercise
 # 確実に TypeScript のコードがあるか確認
 RUN ls -R /app/exercise/src /app/exercise/test || true
 
-# npm依存関係をインストール
+# npm依存関係をインストール（グローバルではなくローカル）
 RUN npm install --legacy-peer-deps
 
+# TypeScriptとts-protoをローカルにインストール（グローバルはやめる）
+RUN npm install --save-dev typescript ts-proto
+
+# TypeScript関連の型定義をインストール
 RUN npm install --save-dev @types/jest @types/node @types/uuid
 
+# ESLint, Prettier の設定をインストール
 RUN npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-config-prettier eslint-plugin-prettier
 
 # TypeScriptファイルをビルド
-RUN tsc
+RUN npx tsc
 
 # シンボリックリンクを作成
 RUN ln -sf /app/exercise/dist/src/main.js /app/exercise/main.js
