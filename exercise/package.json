@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "description": "Minimal NestJS MicroService Examples",
     "main": "dist/main.js",
-    "type": "commonjs",
+    "type": "module",
     "scripts": {
-        "build": "nest build",  
+        "build": "nest build",
         "start": "node dist/main.js"
     },
     "dependencies": {
@@ -49,7 +49,10 @@
         "@types/supertest": "^6.0.2",
         "@types/uuid": "^10.0.0",
         "@types/validator": "^13.12.2",
+        "@typescript-eslint/eslint-plugin": "^8.26.0",
+        "@typescript-eslint/parser": "^8.26.0",
         "cookie-parser": "^1.4.7",
+        "eslint": "^9.22.0",
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-prettier": "^5.2.3",
         "helmet": "^8.0.0",
