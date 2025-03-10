@@ -16,12 +16,10 @@
       "types": ["jest", "node", "uuid"],
       "baseUrl": "./",
       "paths": {
-        "@/*": ["src/*"] 
+        "@src/*": ["src/*"],
       },
       "resolveJsonModule": true
     },
     "include": ["src/**/*", "test/**/*"],
     "exclude": ["node_modules", "dist", "**/*.spec.ts"]
-  }
-
-  
+}
