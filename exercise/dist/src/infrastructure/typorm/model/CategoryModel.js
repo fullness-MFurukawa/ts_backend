@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoryModel = void 0;
 const typeorm_1 = require("typeorm");
-const ProductModel_js_1 = require("./ProductModel.js");
+const ProductModel_1 = require("./ProductModel");
 /**
  * categoryテーブルにマッピングされるエンティティクラス
  * @author Fullness,Inc.
@@ -34,7 +34,7 @@ __decorate([
     __metadata("design:type", String)
 ], CategoryModel.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => ProductModel_js_1.ProductModel, (product) => product.category),
+    (0, typeorm_1.OneToMany)(() => ProductModel_1.ProductModel, (product) => product.category),
     __metadata("design:type", Array)
 ], CategoryModel.prototype, "products", void 0);
 exports.CategoryModel = CategoryModel = __decorate([
