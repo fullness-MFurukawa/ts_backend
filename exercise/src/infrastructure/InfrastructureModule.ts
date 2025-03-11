@@ -1,7 +1,11 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { ProductModel } from "./typorm/model/ProductModel.js";
-import { CategoryModel } from "./typorm/model/CategoryModel.js";
+import { CategoryModelConverter } from "./typorm/adapter/CategoryModelConverter";
+import { ProductModel } from "./typorm/model/ProductModel";
+import { CategoryModel } from "./typorm/model/CategoryModel";
+import { CategoryModelRestorer } from "./typorm/adapter/CategoryModelRestorer";
+import { ProductModelConverter } from "./typorm/adapter/ProductModelConverter";
+import { ProductModelRestorer } from "./typorm/adapter/ProductModelRestorer";
 
 /**
  * インフラストラクチャ層のモジュール定義
@@ -37,8 +41,32 @@ import { CategoryModel } from "./typorm/model/CategoryModel.js";
         ]),
     ],
     providers: [
+        // CategoryエンティティからCategoryModelへの変換
+        {
+            provide: 'CategoryModelConverter',
+            useClass: CategoryModelConverter,
+        },
+        // CategoryModelからCategoryエンティティを復元
+        {
+            provide: 'CategoryModelRestorer',
+            useClass: CategoryModelRestorer,
+        },
+        // ProductエンティティからProductModelへの変換
+        {
+            provide: 'ProductModelConverter',
+            useClass: ProductModelConverter,
+        },
+        // ProductModelからProductエンティティを復元
+        {
+            provide: 'ProductModelRestorer',
+            useClass: ProductModelRestorer,
+        },
     ],
     exports: [
+        'CategoryModelConverter',
+        'CategoryModelRestorer' ,
+        'ProductModelConverter' ,
+        'ProductModelRestorer'  ,
     ],
 })
 export class InfrastructureModule {}

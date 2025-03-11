@@ -9,8 +9,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.InfrastructureModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const ProductModel_js_1 = require("./typorm/model/ProductModel.js");
-const CategoryModel_js_1 = require("./typorm/model/CategoryModel.js");
+const CategoryModelConverter_1 = require("./typorm/adapter/CategoryModelConverter");
+const ProductModel_1 = require("./typorm/model/ProductModel");
+const CategoryModel_1 = require("./typorm/model/CategoryModel");
+const CategoryModelRestorer_1 = require("./typorm/adapter/CategoryModelRestorer");
+const ProductModelConverter_1 = require("./typorm/adapter/ProductModelConverter");
+const ProductModelRestorer_1 = require("./typorm/adapter/ProductModelRestorer");
 /**
  * インフラストラクチャ層のモジュール定義
  * - データベース接続情報
@@ -36,19 +40,45 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
                 database: "exercise_db", // データベース名
                 // 利用するエンティティ
                 entities: [
-                    ProductModel_js_1.ProductModel,
-                    CategoryModel_js_1.CategoryModel
+                    ProductModel_1.ProductModel,
+                    CategoryModel_1.CategoryModel
                 ],
                 synchronize: false, // 本番環境では必ずfalseに設定
                 logging: true, // SQLログの出力を有効化
             }),
             // TypeORMエンティティをモジュールに登録
             typeorm_1.TypeOrmModule.forFeature([
-                ProductModel_js_1.ProductModel,
-                CategoryModel_js_1.CategoryModel,
+                ProductModel_1.ProductModel,
+                CategoryModel_1.CategoryModel,
             ]),
         ],
-        providers: [],
-        exports: [],
+        providers: [
+            // CategoryエンティティからCategoryModelへの変換
+            {
+                provide: 'CategoryModelConverter',
+                useClass: CategoryModelConverter_1.CategoryModelConverter,
+            },
+            // CategoryModelからCategoryエンティティを復元
+            {
+                provide: 'CategoryModelRestorer',
+                useClass: CategoryModelRestorer_1.CategoryModelRestorer,
+            },
+            // ProductエンティティからProductModelへの変換
+            {
+                provide: 'ProductModelConverter',
+                useClass: ProductModelConverter_1.ProductModelConverter,
+            },
+            // ProductModelからProductエンティティを復元
+            {
+                provide: 'ProductModelRestorer',
+                useClass: ProductModelRestorer_1.ProductModelRestorer,
+            },
+        ],
+        exports: [
+            'CategoryModelConverter',
+            'CategoryModelRestorer',
+            'ProductModelConverter',
+            'ProductModelRestorer',
+        ],
     })
 ], InfrastructureModule);
