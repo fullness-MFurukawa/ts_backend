@@ -12,7 +12,7 @@ import { CategoryRepository } from "@src/application/out/repository/CategoryRepo
 /**
  * Categoryエンティティのリポジトリインターフェイス実装
  * @author Fullness,Inc.
- * @date 2025-01-08
+ * @date 2025-03-10
  * @version 1.0.0
  */
 @Injectable()

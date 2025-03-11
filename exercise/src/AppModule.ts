@@ -7,7 +7,7 @@ import { InfrastructureModule } from "./infrastructure/InfrastructureModule";
  * - 各レイヤーモジュールを統合
  * - アプリケーションのエントリーポイント
  * @author Fullness
- * @date 2025-01-10
+ * @date 2025-03-10
  * @version 1.0.0
  */
 @Module({

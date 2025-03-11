@@ -15,6 +15,8 @@ const CategoryModel_1 = require("./typorm/model/CategoryModel");
 const CategoryModelRestorer_1 = require("./typorm/adapter/CategoryModelRestorer");
 const ProductModelConverter_1 = require("./typorm/adapter/ProductModelConverter");
 const ProductModelRestorer_1 = require("./typorm/adapter/ProductModelRestorer");
+const CategoryRepositoryImpl_1 = require("./typorm/repository/CategoryRepositoryImpl");
+const ProductRepositoryImpl_1 = require("./typorm/repository/ProductRepositoryImpl");
 /**
  * インフラストラクチャ層のモジュール定義
  * - データベース接続情報
@@ -73,12 +75,24 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
                 provide: 'ProductModelRestorer',
                 useClass: ProductModelRestorer_1.ProductModelRestorer,
             },
+            // 商品カテゴリリポジトリ
+            {
+                provide: 'CategoryRepository',
+                useClass: CategoryRepositoryImpl_1.CategoryRepositoryImpl,
+            },
+            // 商品リポジトリ
+            {
+                provide: 'ProductRepository',
+                useClass: ProductRepositoryImpl_1.ProductRepositoryImpl,
+            },
         ],
         exports: [
             'CategoryModelConverter',
             'CategoryModelRestorer',
             'ProductModelConverter',
             'ProductModelRestorer',
+            'CategoryRepository',
+            'ProductRepository',
         ],
     })
 ], InfrastructureModule);

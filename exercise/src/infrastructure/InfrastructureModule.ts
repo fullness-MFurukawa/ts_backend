@@ -6,6 +6,8 @@ import { CategoryModel } from "./typorm/model/CategoryModel";
 import { CategoryModelRestorer } from "./typorm/adapter/CategoryModelRestorer";
 import { ProductModelConverter } from "./typorm/adapter/ProductModelConverter";
 import { ProductModelRestorer } from "./typorm/adapter/ProductModelRestorer";
+import { CategoryRepositoryImpl } from "./typorm/repository/CategoryRepositoryImpl";
+import { ProductRepositoryImpl } from "./typorm/repository/ProductRepositoryImpl";
 
 /**
  * インフラストラクチャ層のモジュール定義
@@ -61,12 +63,24 @@ import { ProductModelRestorer } from "./typorm/adapter/ProductModelRestorer";
             provide: 'ProductModelRestorer',
             useClass: ProductModelRestorer,
         },
+        // 商品カテゴリリポジトリ
+        {
+            provide: 'CategoryRepository' ,
+            useClass: CategoryRepositoryImpl,
+        },
+        // 商品リポジトリ
+        {
+            provide: 'ProductRepository' ,
+            useClass: ProductRepositoryImpl,
+        },
     ],
     exports: [
         'CategoryModelConverter',
         'CategoryModelRestorer' ,
         'ProductModelConverter' ,
         'ProductModelRestorer'  ,
+        'CategoryRepository'    ,
+        'ProductRepository'     ,
     ],
 })
 export class InfrastructureModule {}
