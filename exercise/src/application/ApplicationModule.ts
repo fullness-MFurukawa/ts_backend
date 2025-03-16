@@ -3,6 +3,8 @@ import { InfrastructureModule } from "@src/infrastructure/InfrastructureModule";
 import { CategoryDTOConverter } from "./in/adapter/CategoryDTOConverter";
 import { ProductDTOConverter } from "./in/adapter/ProductDTOConverter";
 import { ProductDTORestorer } from "./in/adapter/ProductDTORestorer";
+import { CategoryInteractor } from "./in/service/CategoryInteractor";
+import { ProductInteractor } from "./in/service/ProductInteractor";
 /**
  * サービス層のモジュール定義
  * - 商品カテゴリサービス、商品サービスを登録
@@ -32,11 +34,23 @@ import { ProductDTORestorer } from "./in/adapter/ProductDTORestorer";
             provide:    'ProductDTORestorer',    
             useClass:   ProductDTORestorer,     
         },
+        // 商品カテゴリユースケースインターフェイスの実装
+        {
+            provide:    'CategoryUsecase',    
+            useClass:   CategoryInteractor,     
+        },
+        // 商品ユースケースインターフェイスの実装
+        {
+            provide:    'ProductUsecase',    
+            useClass:   ProductInteractor,     
+        },
     ],
     exports: [
         'CategoryDTOConverter'  ,  
         'ProductDTOConverter'   , 
         'ProductDTORestorer'    ,  
+        'CategoryUsecase'       ,
+        'ProductUsecase'        ,      
     ]
 })
 export class ApplicationModule {}

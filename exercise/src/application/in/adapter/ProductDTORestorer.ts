@@ -8,6 +8,7 @@ import { CategoryName } from "@src/application/domain/model/category/CategoryNam
 import { ProductId } from "@src/application/domain/model/product/ProductId";
 import { ProductName } from "@src/application/domain/model/product/ProductName";
 import { ProductPrice } from "@src/application/domain/model/product/ProductPrice";
+import { CategoryDTO } from "../dto/CategoryDTO";
 
 /**
  * プレゼンテーション層から受け取った商品からProductエンティティを復元する
@@ -22,7 +23,7 @@ export class ProductDTORestorer implements Restorer<ProductDTO , Product> {
      * @param source ProductInput
      */
     async restore(source: ProductDTO): Promise<Product> {
-        const category = this.createCategoryIfNeeded(source.category.id);
+        const category = this.createCategoryIfNeeded(source.category);
         const product = source.id === null 
             ? this.createNewProduct(source, category)
             : this.restoreExistingProduct(source, category);
@@ -33,13 +34,13 @@ export class ProductDTORestorer implements Restorer<ProductDTO , Product> {
      * @param categoryId string | null
      * @returns Category | null
      */
-    private createCategoryIfNeeded(categoryId: string | null): Category | null {
-        if (categoryId !== null) {
+    private createCategoryIfNeeded(category: CategoryDTO | null): Category | null {
+        if ( category != null && category.id !== null) {
             return Category.fromExisting(
-                CategoryId.fromString(categoryId),
+                CategoryId.fromString(category.id),
                 CategoryName.fromString('dummy')
             );
-        }
+        }    
         return null;
     } 
     /**

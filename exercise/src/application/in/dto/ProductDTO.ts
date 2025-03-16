@@ -7,8 +7,8 @@ import { CategoryDTO } from "./CategoryDTO";
  * @version 1.0.0
  */
 export class ProductDTO {
-    id:         string;         // 商品Id
-    name:       string;         // 商品名
-    price:      number;         // 商品単価
-    category:   CategoryDTO;    // 商品カテゴリ
+    id:         string  | null;     // 商品Id（新規作成時は null）
+    name:       string;             // 商品名
+    price:      number;             // 商品単価
+    category:   CategoryDTO | null; // 商品カテゴリ（カテゴリなしの場合は null）
 }

@@ -5,6 +5,6 @@
  * @version 1.0.0
  */
 export class CategoryDTO {
-    id:     string; // 商品カテゴリId
-    name:   string; // 商品カテゴリ名
+    id:     string | null;  // 商品カテゴリId(不要な場合null)
+    name:   string;         // 商品カテゴリ名
 }

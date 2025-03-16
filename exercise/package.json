@@ -5,7 +5,7 @@
     "main": "dist/main.js",
     "scripts": {
         "build": "nest build",
-        "start": "node dist/main.js"
+        "start": "node dist/src/main.js"
     },
     "dependencies": {
         "@grpc/grpc-js": "^1.12.5",
