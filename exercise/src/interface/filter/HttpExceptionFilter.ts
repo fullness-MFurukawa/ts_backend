@@ -18,44 +18,43 @@ import { NotFoundException } from "@src/shared/exceptions/NotFoundException";
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
     private readonly logger = new Logger(HttpExceptionFilter.name);
+    
+    /**
+     * 例外ごとのHTTPステータスコードをマッピング
+     */
+     private static readonly statusMap = new Map<Function, number>([
+        [HttpException, HttpStatus.INTERNAL_SERVER_ERROR], // デフォルト
+        [DomainException, HttpStatus.BAD_REQUEST], // DomainException
+        [ExistsException, HttpStatus.BAD_REQUEST], // ExistsException
+        [NotFoundException, HttpStatus.NOT_FOUND], // NotFoundException
+        [InternalException, HttpStatus.INTERNAL_SERVER_ERROR],// InternalException
+    ]);
 
     catch(exception: any, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse();
         const request = ctx.getRequest();
 
-        let status = HttpStatus.INTERNAL_SERVER_ERROR;
-        let message = '内部エラーが発生しました';
+        // 例外のステータスコードを取得 (マップにない場合は500)
+        const status = HttpExceptionFilter.statusMap.get(exception.constructor) || HttpStatus.INTERNAL_SERVER_ERROR;
+        
+        // 例外メッセージを取得
+        const message = exception instanceof HttpException 
+            ? exception.getResponse()
+            : exception.message || "内部エラーが発生しました";
 
-        if (exception instanceof HttpException) { // HttpException の場合
-            status = exception.getStatus();
-            const exceptionResponse = exception.getResponse();
-            message = typeof exceptionResponse === 'string' 
-                ? exceptionResponse 
-                : (exceptionResponse as any).message;
-        } else if (exception instanceof DomainException) { // DomainExceptionの場合
-            status = HttpStatus.BAD_REQUEST;
-            message = exception.message;
-        }else if (exception instanceof ExistsException) { // ExistsExceptionの場合
-            status = HttpStatus.BAD_REQUEST;
-            message = exception.message;
-        } else if (exception instanceof NotFoundException) { // NotFoundExceptionの場合
-            status = HttpStatus.NOT_FOUND;
-            message = exception.message;
-        } else if (exception instanceof InternalException) { // InternalExceptionの場合
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            message = exception.message;
-        } else { // その他のエラーの場合
-            this.logger.error(
-                '予期しないエラーが発生しました', exception.stack || exception);
+        // 例外をログに記録
+        if (!(exception instanceof HttpException)) {
+            this.logger.error("エラーが発生しました", exception.stack || exception);
         }
 
-        // レスポンスを送信
+        // エラーレスポンスを送信
         response.status(status).json({
             statusCode: status,
             timestamp: new Date().toISOString(),
             path: request.url,
-            message,
+            message: typeof message === "string" ? message : (message as any).message,
         });
     }
 }
+

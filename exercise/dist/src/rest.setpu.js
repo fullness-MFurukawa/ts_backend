@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.setupRestServer = setupRestServer;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
-const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const swagger_1 = require("@nestjs/swagger");
 const helmet_1 = __importDefault(require("helmet"));
 const HttpExceptionFilter_1 = require("./interface/filter/HttpExceptionFilter");
 /**
@@ -33,15 +33,25 @@ async function setupRestServer(app) {
         // 例外フィルターの設定
         app.useGlobalFilters(new HttpExceptionFilter_1.HttpExceptionFilter());
         app.useGlobalPipes(new common_1.ValidationPipe({
-            whitelist: true,
-            forbidNonWhitelisted: true,
-            transform: true,
+            whitelist: true, // DTOで定義されていないプロパティを自動的に除外
+            forbidNonWhitelisted: true, // DTOにないプロパティがリクエストに含まれていた場合、エラーを返す
+            transform: true, // リクエストのデータ型をDTOで定義された型に変換
         }));
-        app.use((0, cookie_parser_1.default)());
+        // helmetは、HTTP ヘッダーを適切に設定してセキュリティを強化するミドルウェア
         app.use((0, helmet_1.default)());
+        // Swagger(OpenAPI)の設定
+        const config = new swagger_1.DocumentBuilder()
+            .setTitle("マイクロサービスハンズオン:TypeScript編 商品管理API") // APIのタイトル
+            .setDescription("商品管理APIのエンドポイント一覧") // 説明
+            .setVersion("1.0.0") // バージョン
+            .addTag("products") // タグ（カテゴリ分け用）
+            .build();
+        const document = swagger_1.SwaggerModule.createDocument(app, config);
+        swagger_1.SwaggerModule.setup("api", app, document); // "/api" でSwagger UIを表示
         // サーバー起動
         await app.listen(REST_PORT);
         logger.log(`✅ REST APIの実行: http://localhost:${REST_PORT}`);
+        common_1.Logger.log(`📖 OpenAPIドキュメント: http://localhost:${REST_PORT}/api`);
     }
     catch (error) {
         logger.error("❌ REST API の初期化に失敗しました:", error);

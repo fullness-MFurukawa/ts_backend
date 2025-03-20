@@ -10,11 +10,14 @@ exports.InterfaceModule = void 0;
 const common_1 = require("@nestjs/common");
 const ApplicationModule_1 = require("../application/ApplicationModule");
 const ProductKeywordSearchRESTController_1 = require("./rest/controller/ProductKeywordSearchRESTController");
+const RegisterProductParamConverter_1 = require("./rest/adapter/RegisterProductParamConverter");
+const ProductRegisterRESTController_1 = require("./rest/controller/ProductRegisterRESTController");
+const ModifyProductParamComverter_1 = require("./rest/adapter/ModifyProductParamComverter");
+const ProductModifyRESTController_1 = require("./rest/controller/ProductModifyRESTController");
 /**
  * インターフェイス層のモジュール定義
  * - 商品カテゴリサービス、商品サービスを登録
- * - ユースケース層から呼び出されるビジネスロジックを提供
- * - ドメインモデルやリポジトリと連携して具体的な操作を実行
+ * - リクエストに応答するControllerと、リクエストパラメータを変換するAdapterを提供
  * @author Fullness
  * @date 2025-03-16
  * @version 1.0.0
@@ -29,8 +32,24 @@ exports.InterfaceModule = InterfaceModule = __decorate([
         ],
         controllers: [
             ProductKeywordSearchRESTController_1.ProductKeywordSearchRESTController, // 商品キーワード検索:RESTAPIコントローラ
+            ProductRegisterRESTController_1.ProductRegisterRESTController, // 商品登録:RESTAPIコントローラ
+            ProductModifyRESTController_1.ProductModifyRESTController, // 既存商品の変更RESTAPIコントローラ
         ],
-        providers: [],
-        exports: []
+        providers: [
+            // RegisterProductParamからProductDTOへの変換
+            {
+                provide: 'RegisterProductParamConverter',
+                useClass: RegisterProductParamConverter_1.RegisterProductParamConverter,
+            },
+            // ModifyProductParamからProductDTOへの変換
+            {
+                provide: 'ModifyProductParamConverter',
+                useClass: ModifyProductParamComverter_1.ModifyProductParamConverter,
+            },
+        ],
+        exports: [
+            'RegisterProductParamConverter', // 商品登録パラメータ変換クラス
+            'ModifyProductParamConverter', // 商品変更パラメータ変換クラス
+        ]
     })
 ], InterfaceModule);

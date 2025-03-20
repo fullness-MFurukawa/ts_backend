@@ -16,6 +16,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductKeywordSearchRESTController = void 0;
 const common_1 = require("@nestjs/common");
 const KeywordSearchParam_1 = require("../param/KeywordSearchParam");
+const ProductDTO_1 = require("../../../application/in/dto/ProductDTO");
+const swagger_1 = require("@nestjs/swagger");
 /**
  * 商品キーワード検索RESTAPIコントローラ
  * @author Fullness,Inc.
@@ -43,6 +45,10 @@ let ProductKeywordSearchRESTController = ProductKeywordSearchRESTController_1 = 
 };
 exports.ProductKeywordSearchRESTController = ProductKeywordSearchRESTController;
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: "商品キーワード検索", description: "キーワードを含む商品を検索します。" }),
+    (0, swagger_1.ApiQuery)({ name: "keyword", required: true, description: "検索する商品キーワード" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "成功", type: [ProductDTO_1.ProductDTO] }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: "商品が見つからない" }),
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)(new common_1.ValidationPipe({ transform: true }))),
     __metadata("design:type", Function),
@@ -50,6 +56,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductKeywordSearchRESTController.prototype, "searchByKeyword", null);
 exports.ProductKeywordSearchRESTController = ProductKeywordSearchRESTController = ProductKeywordSearchRESTController_1 = __decorate([
+    (0, swagger_1.ApiTags)("商品キーワード検索") // Swagger UIでカテゴリ表示
+    ,
     (0, common_1.Controller)('products/search'),
     __param(0, (0, common_1.Inject)('ProductUsecase')),
     __metadata("design:paramtypes", [Object])

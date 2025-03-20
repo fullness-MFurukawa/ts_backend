@@ -2,6 +2,7 @@ import { Controller, Get, Inject, Logger, Query, ValidationPipe } from "@nestjs/
 import { KeywordSearchParam } from "../param/KeywordSearchParam";
 import { ProductDTO } from "@src/application/in/dto/ProductDTO";
 import { ProductUsecase } from "@src/application/in/usecase/ProductUsecase";
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 /**
  * 商品キーワード検索RESTAPIコントローラ
@@ -9,6 +10,7 @@ import { ProductUsecase } from "@src/application/in/usecase/ProductUsecase";
  * @date 2025-03-16
  * @version 1.0.0
  */
+@ApiTags("商品キーワード検索") // Swagger UIでカテゴリ表示
 @Controller('products/search')
 export class ProductKeywordSearchRESTController {
     private readonly logger = new Logger(ProductKeywordSearchRESTController.name);
@@ -24,6 +26,10 @@ export class ProductKeywordSearchRESTController {
      * 商品キーワード検索リクエストハンドラ
      * @param keyword 商品キーワード
      */
+    @ApiOperation({ summary: "商品キーワード検索", description: "キーワードを含む商品を検索します。" })
+    @ApiQuery({ name: "keyword", required: true, description: "検索する商品キーワード" })
+    @ApiResponse({ status: 200, description: "成功", type: [ProductDTO] })
+    @ApiResponse({ status: 404, description: "商品が見つからない" })
     @Get()
     async searchByKeyword(
     @Query(new ValidationPipe({ transform: true })) param: KeywordSearchParam): Promise<ProductDTO[]> {

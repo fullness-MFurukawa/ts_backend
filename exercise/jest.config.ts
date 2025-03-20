@@ -2,7 +2,7 @@ import { pathsToModuleNameMapper } from "ts-jest";
 import { readFileSync } from "fs";
 import { join } from "path";
 
-// tsconfig.json を読み込む
+// tsconfig.jsonを読み込む
 const tsconfig = JSON.parse(readFileSync(join(__dirname, "tsconfig.json"), "utf8"));
 
 export default {

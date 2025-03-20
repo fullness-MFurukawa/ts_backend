@@ -27,34 +27,75 @@ let HttpExceptionFilter = HttpExceptionFilter_1 = class HttpExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse();
         const request = ctx.getRequest();
-        let status = common_1.HttpStatus.INTERNAL_SERVER_ERROR;
+        // 例外のステータスコードを取得 (マップにない場合は500)
+        const status = HttpExceptionFilter_1.statusMap.get(exception.constructor) || common_1.HttpStatus.INTERNAL_SERVER_ERROR;
+        // 例外メッセージを取得
+        const message = exception instanceof common_1.HttpException
+            ? exception.getResponse()
+            : exception.message || "内部エラーが発生しました";
+        // 予期しない例外をログに記録
+        if (!(exception instanceof common_1.HttpException)) {
+            this.logger.error("予期しないエラーが発生しました", exception.stack || exception);
+        }
+        // エラーレスポンスを送信
+        response.status(status).json({
+            statusCode: status,
+            timestamp: new Date().toISOString(),
+            path: request.url,
+            message: typeof message === "string" ? message : message.message,
+        });
+    }
+};
+exports.HttpExceptionFilter = HttpExceptionFilter;
+/**
+ * 例外ごとのHTTPステータスコードをマッピング
+ */
+HttpExceptionFilter.statusMap = new Map([
+    [common_1.HttpException, common_1.HttpStatus.INTERNAL_SERVER_ERROR], // デフォルト
+    [DomainException_1.DomainException, common_1.HttpStatus.BAD_REQUEST], // DomainException
+    [ExistsException_1.ExistsException, common_1.HttpStatus.BAD_REQUEST], // ExistsException
+    [NotFoundException_1.NotFoundException, common_1.HttpStatus.NOT_FOUND], // NotFoundException
+    [InternalException_1.InternalException, common_1.HttpStatus.INTERNAL_SERVER_ERROR], // InternalException
+]);
+exports.HttpExceptionFilter = HttpExceptionFilter = HttpExceptionFilter_1 = __decorate([
+    (0, common_1.Catch)()
+], HttpExceptionFilter);
+/*
+@Catch()
+export class HttpExceptionFilter implements ExceptionFilter {
+    private readonly logger = new Logger(HttpExceptionFilter.name);
+
+    catch(exception: any, host: ArgumentsHost) {
+        const ctx = host.switchToHttp();
+        const response = ctx.getResponse();
+        const request = ctx.getRequest();
+
+        let status = HttpStatus.INTERNAL_SERVER_ERROR;
         let message = '内部エラーが発生しました';
-        if (exception instanceof common_1.HttpException) { // HttpException の場合
+
+        if (exception instanceof HttpException) { // HttpException の場合
             status = exception.getStatus();
             const exceptionResponse = exception.getResponse();
             message = typeof exceptionResponse === 'string'
                 ? exceptionResponse
-                : exceptionResponse.message;
-        }
-        else if (exception instanceof DomainException_1.DomainException) { // DomainExceptionの場合
-            status = common_1.HttpStatus.BAD_REQUEST;
+                : (exceptionResponse as any).message;
+        } else if (exception instanceof DomainException) { // DomainExceptionの場合
+            status = HttpStatus.BAD_REQUEST;
             message = exception.message;
-        }
-        else if (exception instanceof ExistsException_1.ExistsException) { // ExistsExceptionの場合
-            status = common_1.HttpStatus.BAD_REQUEST;
+        }else if (exception instanceof ExistsException) { // ExistsExceptionの場合
+            status = HttpStatus.BAD_REQUEST;
             message = exception.message;
-        }
-        else if (exception instanceof NotFoundException_1.NotFoundException) { // NotFoundExceptionの場合
-            status = common_1.HttpStatus.NOT_FOUND;
+        } else if (exception instanceof NotFoundException) { // NotFoundExceptionの場合
+            status = HttpStatus.NOT_FOUND;
             message = exception.message;
-        }
-        else if (exception instanceof InternalException_1.InternalException) { // InternalExceptionの場合
-            status = common_1.HttpStatus.INTERNAL_SERVER_ERROR;
+        } else if (exception instanceof InternalException) { // InternalExceptionの場合
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
             message = exception.message;
+        } else { // その他のエラーの場合
+            this.logger.error(
+                '予期しないエラーが発生しました', exception.stack || exception);
         }
-        else { // その他のエラーの場合
-            this.logger.error('予期しないエラーが発生しました', exception.stack || exception);
-        }
+
         // レスポンスを送信
         response.status(status).json({
             statusCode: status,
@@ -63,8 +104,5 @@ let HttpExceptionFilter = HttpExceptionFilter_1 = class HttpExceptionFilter {
             message,
         });
     }
-};
-exports.HttpExceptionFilter = HttpExceptionFilter;
-exports.HttpExceptionFilter = HttpExceptionFilter = HttpExceptionFilter_1 = __decorate([
-    (0, common_1.Catch)()
-], HttpExceptionFilter);
+}
+    */ 
