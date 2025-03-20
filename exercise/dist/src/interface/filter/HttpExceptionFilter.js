@@ -33,9 +33,9 @@ let HttpExceptionFilter = HttpExceptionFilter_1 = class HttpExceptionFilter {
         const message = exception instanceof common_1.HttpException
             ? exception.getResponse()
             : exception.message || "内部エラーが発生しました";
-        // 予期しない例外をログに記録
+        // 例外をログに記録
         if (!(exception instanceof common_1.HttpException)) {
-            this.logger.error("予期しないエラーが発生しました", exception.stack || exception);
+            this.logger.error("エラーが発生しました", exception.stack || exception);
         }
         // エラーレスポンスを送信
         response.status(status).json({
@@ -60,49 +60,3 @@ HttpExceptionFilter.statusMap = new Map([
 exports.HttpExceptionFilter = HttpExceptionFilter = HttpExceptionFilter_1 = __decorate([
     (0, common_1.Catch)()
 ], HttpExceptionFilter);
-/*
-@Catch()
-export class HttpExceptionFilter implements ExceptionFilter {
-    private readonly logger = new Logger(HttpExceptionFilter.name);
-
-    catch(exception: any, host: ArgumentsHost) {
-        const ctx = host.switchToHttp();
-        const response = ctx.getResponse();
-        const request = ctx.getRequest();
-
-        let status = HttpStatus.INTERNAL_SERVER_ERROR;
-        let message = '内部エラーが発生しました';
-
-        if (exception instanceof HttpException) { // HttpException の場合
-            status = exception.getStatus();
-            const exceptionResponse = exception.getResponse();
-            message = typeof exceptionResponse === 'string'
-                ? exceptionResponse
-                : (exceptionResponse as any).message;
-        } else if (exception instanceof DomainException) { // DomainExceptionの場合
-            status = HttpStatus.BAD_REQUEST;
-            message = exception.message;
-        }else if (exception instanceof ExistsException) { // ExistsExceptionの場合
-            status = HttpStatus.BAD_REQUEST;
-            message = exception.message;
-        } else if (exception instanceof NotFoundException) { // NotFoundExceptionの場合
-            status = HttpStatus.NOT_FOUND;
-            message = exception.message;
-        } else if (exception instanceof InternalException) { // InternalExceptionの場合
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            message = exception.message;
-        } else { // その他のエラーの場合
-            this.logger.error(
-                '予期しないエラーが発生しました', exception.stack || exception);
-        }
-
-        // レスポンスを送信
-        response.status(status).json({
-            statusCode: status,
-            timestamp: new Date().toISOString(),
-            path: request.url,
-            message,
-        });
-    }
-}
-    */ 

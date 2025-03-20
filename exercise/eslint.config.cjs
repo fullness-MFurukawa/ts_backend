@@ -1,10 +1,10 @@
-import js from "@eslint/js";
-import ts from "@typescript-eslint/eslint-plugin";
-import tsParser from "@typescript-eslint/parser";
+const js = require("@eslint/js");
+const ts = require("@typescript-eslint/eslint-plugin");
+const tsParser = require("@typescript-eslint/parser");
 
-export default [
+module.exports = [
   {
-    ignores: ["dist/"], 
+    ignores: ["dist/", "main.js"], // distフォルダとmain.jsを無視
   },
   js.configs.recommended,
   {
@@ -14,9 +14,6 @@ export default [
       ecmaVersion: "latest",
       globals: {
         console: "readonly",
-        require: "readonly",
-        exports: "readonly",
-        module: "readonly",
         process: "readonly",
       },
     },
@@ -24,8 +21,7 @@ export default [
       "@typescript-eslint": ts,
     },
     rules: {
-      "no-undef": "off", 
+      "no-undef": "off",
     },
   },
 ];
-

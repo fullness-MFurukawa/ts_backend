@@ -17,6 +17,7 @@ const ProductModelConverter_1 = require("./typorm/adapter/ProductModelConverter"
 const ProductModelRestorer_1 = require("./typorm/adapter/ProductModelRestorer");
 const CategoryRepositoryImpl_1 = require("./typorm/repository/CategoryRepositoryImpl");
 const ProductRepositoryImpl_1 = require("./typorm/repository/ProductRepositoryImpl");
+const config_1 = require("@nestjs/config");
 /**
  * インフラストラクチャ層のモジュール定義
  * - データベース接続情報
@@ -32,21 +33,26 @@ exports.InfrastructureModule = InfrastructureModule;
 exports.InfrastructureModule = InfrastructureModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            // データベース接続情報を定義 (TypeORM設定)
-            typeorm_1.TypeOrmModule.forRoot({
-                type: "mysql", // データベースの種類
-                host: "ts_exercise_db", // ホスト名
-                port: 3306, // ポート番号
-                username: "user", // ユーザー名
-                password: "password", // パスワード
-                database: "exercise_db", // データベース名
-                // 利用するエンティティ
-                entities: [
-                    ProductModel_1.ProductModel,
-                    CategoryModel_1.CategoryModel
-                ],
-                synchronize: false, // 本番環境では必ずfalseに設定
-                logging: true, // SQLログの出力を有効化
+            // 環境変数を利用するために ConfigModule をロード
+            config_1.ConfigModule.forRoot({
+                isGlobal: true, // アプリケーション全体で利用可能にする
+                envFilePath: ".env",
+            }),
+            // データベース接続情報を環境変数から設定 (TypeORM設定)
+            typeorm_1.TypeOrmModule.forRootAsync({
+                imports: [config_1.ConfigModule],
+                inject: [config_1.ConfigService],
+                useFactory: (configService) => ({
+                    type: configService.get("DB_TYPE"), // データベースの種類
+                    host: configService.get("DB_HOST"), // ホスト名
+                    port: configService.get("DB_PORT"), // ポート番号
+                    username: configService.get("DB_USERNAME"), // ユーザー名
+                    password: configService.get("DB_PASSWORD"), // パスワード
+                    database: configService.get("DB_DATABASE"), // データベース名
+                    entities: [ProductModel_1.ProductModel, CategoryModel_1.CategoryModel], // 利用するエンティティ
+                    synchronize: configService.get("DB_SYNCHRONIZE"), // 本番環境では必ずfalseに設定
+                    logging: configService.get("DB_LOGGING"), // SQLログの出力を有効化
+                }),
             }),
             // TypeORMエンティティをモジュールに登録
             typeorm_1.TypeOrmModule.forFeature([

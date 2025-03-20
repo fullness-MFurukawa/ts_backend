@@ -2,6 +2,7 @@
     "name": "backend_service",
     "version": "1.0.0",
     "description": "Minimal NestJS MicroService Examples",
+    "type": "commonjs",
     "main": "dist/main.js",
     "scripts": {
         "build": "nest build",

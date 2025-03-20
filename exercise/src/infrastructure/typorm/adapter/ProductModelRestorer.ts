@@ -1,11 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Restorer } from "@src/shared/adapter/Restorer";
-import { ProductModel } from "../model/ProductModel";
 import { Product } from "@src/application/domain/model/product/Product";
 import { CategoryModelRestorer } from "./CategoryModelRestorer";
 import { ProductId } from "@src/application/domain/model/product/ProductId";
 import { ProductName } from "@src/application/domain/model/product/ProductName";
 import { ProductPrice } from "@src/application/domain/model/product/ProductPrice";
+import { ProductModel } from "../model/ProductModel";
 
 
 /**
