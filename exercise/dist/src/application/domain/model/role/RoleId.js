@@ -33,76 +33,75 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CategoryId = void 0;
+exports.RoleId = void 0;
 const uuid = __importStar(require("uuid"));
 const DomainException_1 = require("../../exception/DomainException");
 /**
- * 商品カテゴリを一意に識別するための値オブジェクト
- * 不変性を持ち、妥当性検証を内部で行う
+ * ロールを一意に識別するための値オブジェクト
+ * UUID形式で不変性を持ち、妥当性検証を内部で行う
  * @author Fullness,Inc.
- * @date 2025-03-10
+ * @date 2025-03-21
  * @version 1.0.0
  */
-class CategoryId {
+class RoleId {
     /**
      * プライベートコンストラクタ
-     * 外部から直接インスタンスを生成できないようにし、
-     * createNew()またはfromString()を使用する
+     * createNew()またはfromString()からのみインスタンス化可能
      * @param id UUID値
      */
     constructor(id) {
-        this.validateCategoryId(id); // UUIDの妥当性を検証
-        this.value = id; // 検証に成功したUUID値を設定
+        this.validateRoleId(id); // 妥当性検証
+        this.value = id;
     }
     /**
-     * 新しいUUIDを生成してCategoryIdのインスタンスを作成
-     * @returns 新規作成されたCategoryId`
+     * UUID形式の妥当性検証
+     * @param value チェック対象のUUID
+     * @throws DomainException UUIDが不正な場合
+     */
+    validateRoleId(value) {
+        if (!value || value.trim() === "") {
+            throw new DomainException_1.DomainException('ロールIdは、必須です。');
+        }
+        if (!uuid.validate(value)) {
+            throw new DomainException_1.DomainException('ロールIdは、UUID形式である必要があります。');
+        }
+    }
+    /**
+     * 新しいUUIDを生成してRoleIdを作成
+     * @returns 新規RoleIdインスタンス
      */
     static createNew() {
-        // ランダムなUUIDを生成してインスタンス化
-        return new CategoryId(uuid.v4());
+        return new RoleId(uuid.v4());
     }
     /**
-     * 既存のUUIDからCategoryIdのインスタンスを生成
+     * 既存のUUIDからRoleIdを生成
      * @param id 既存のUUID
-     * @returns CategoryIdインスタンス
+     * @returns RoleIdインスタンス
      */
     static fromString(id) {
-        return new CategoryId(id); // 引数のUUIDを検証し、インスタンス化
+        return new RoleId(id);
     }
     /**
-     * 内部的に保持しているUUID値を取得
-     * @returns UUID値
+     * 保持しているUUID値を返す
+     * @returns UUID文字列
      */
     getValue() {
         return this.value;
     }
     /**
-     * UUIDの妥当性を検証するプライベートメソッド
-     * @param value 検証対象のUUID値
-     * @throws DomainException UUIDが不正な場合にスロー
-     */
-    validateCategoryId(value) {
-        if (!value || value.trim() === "") {
-            throw new DomainException_1.DomainException('商品カテゴリId、は必須です。');
-        }
-        if (!uuid.validate(value)) {
-            throw new DomainException_1.DomainException('商品カテゴリIdは、UUID形式でなければなりません。');
-        }
-    }
-    /**
-     * このCategoryIdと他のCategoryIdが等しいかどうかを判定する
-     * @param other 比較対象のCategoryId
-     * @returns 他のCategoryIdと等しい場合はtrue、それ以外の場合はfalse
+     * 他のRoleIdと同一かどうか比較
+     * @param other 比較対象のRoleId
+     * @returns 同一であればtrue
      */
     equals(other) {
-        return other instanceof CategoryId && this.value === other.value;
+        return other instanceof RoleId && this.value === other.value;
     }
     /**
-     * @returns 商品カテゴリIdの値を含む文字列
+     * 文字列表現を返す
+     * @returns ロールIdの文字列表現
      */
     toString() {
-        return `CategoryId=${this.value}`;
+        return `RoleId=${this.value}`;
     }
 }
-exports.CategoryId = CategoryId;
+exports.RoleId = RoleId;

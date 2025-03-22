@@ -52,7 +52,7 @@ export class CategoryId {
     /**
      * UUIDの妥当性を検証するプライベートメソッド
      * @param value 検証対象のUUID値
-     * @throws DomainError UUIDが不正な場合にスロー
+     * @throws DomainException UUIDが不正な場合にスロー
      */
     private validateCategoryId(value: string){
         if (!value || value.trim() === "") {

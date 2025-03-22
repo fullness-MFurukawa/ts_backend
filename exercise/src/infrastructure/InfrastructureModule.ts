@@ -9,6 +9,17 @@ import { ProductModelRestorer } from "./typorm/adapter/ProductModelRestorer";
 import { CategoryRepositoryImpl } from "./typorm/repository/CategoryRepositoryImpl";
 import { ProductRepositoryImpl } from "./typorm/repository/ProductRepositoryImpl";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { RoleModelConverter } from "./typorm/adapter/RoleModelConverter";
+import { RoleModelRestorer } from "./typorm/adapter/RoleModelRestorer";
+import { RoleModel } from "./typorm/model/RoleModel";
+import { UserModel } from "./typorm/model/UserModel";
+import { UserRoleModel } from "./typorm/model/UserRoleModel";
+import { RefreshTokenModel } from "./typorm/model/RefreshTokenModel";
+import { UserModelConverter } from "./typorm/adapter/UserModelConverter";
+import { UserModelRestorer } from "./typorm/adapter/UserModelRestorer";
+import { RoleRepositoryImpl } from "./typorm/repository/RoleRepositoryImpl";
+import { UserRepositoryImpl } from "./typorm/repository/UserRepositoryImpl";
+
 
 /**
  * インフラストラクチャ層のモジュール定義
@@ -38,7 +49,15 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
                 username: configService.get<string>("DB_USERNAME"),// ユーザー名
                 password: configService.get<string>("DB_PASSWORD"),// パスワード
                 database: configService.get<string>("DB_DATABASE"),// データベース名
-                entities: [ProductModel, CategoryModel],// 利用するエンティティ
+                // 利用するエンティティ
+                entities: [
+                    ProductModel, 
+                    CategoryModel,
+                    RoleModel,
+                    UserModel,
+                    UserRoleModel,
+                    RefreshTokenModel
+                ],
                 synchronize: configService.get<boolean>("DB_SYNCHRONIZE"),// 本番環境では必ずfalseに設定
                 logging: configService.get<boolean>("DB_LOGGING"),// SQLログの出力を有効化
             }),    
@@ -47,6 +66,10 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
         TypeOrmModule.forFeature([
             ProductModel, 
             CategoryModel,
+            RoleModel,
+            UserModel,
+            UserRoleModel,
+            RefreshTokenModel
         ]),
     ],
     providers: [
@@ -80,6 +103,39 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
             provide: 'ProductRepository' ,
             useClass: ProductRepositoryImpl,
         },
+        /***********************************/
+        /* 認証・認可機能                   */
+        /***********************************/ 
+        // RoleエンティティからRoleModelへの変換
+        {
+            provide: 'RoleModelConverter'   ,
+            useClass: RoleModelConverter    ,
+        },  
+        // RoleModelからRoleエンティティを復元
+        {
+            provide: 'RoleModelRestorer'   ,
+            useClass: RoleModelRestorer    ,
+        },
+        // UserエンティティからUserModelへの変換
+        {
+            provide:   'UserModelConverter' ,
+            useClass:   UserModelConverter  ,
+        },
+        // UserModelからUserエンティティを復元
+        {
+            provide:  'UserModelRestorer'   ,
+            useClass: UserModelRestorer     ,
+        },
+        // ロールリポジトリ
+        {
+            provide:    'RoleRepository'    ,
+            useClass:   RoleRepositoryImpl  ,
+        },
+        // ユーザーリポジトリ
+        {
+            provide:    'UserRepository'    ,
+            useClass:   UserRepositoryImpl  ,
+        },
     ],
     exports: [
         'CategoryModelConverter',
@@ -88,6 +144,12 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
         'ProductModelRestorer'  ,
         'CategoryRepository'    ,
         'ProductRepository'     ,
+        'RoleModelConverter'    ,
+        'RoleModelRestorer'     ,
+        'UserModelConverter'    ,
+        'UserModelRestorer'     ,
+        'RoleRepository'        ,
+        'UserRepository'            ,
     ],
 })
 export class InfrastructureModule {}

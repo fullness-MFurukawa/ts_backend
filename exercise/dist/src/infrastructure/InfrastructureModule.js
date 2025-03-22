@@ -18,6 +18,16 @@ const ProductModelRestorer_1 = require("./typorm/adapter/ProductModelRestorer");
 const CategoryRepositoryImpl_1 = require("./typorm/repository/CategoryRepositoryImpl");
 const ProductRepositoryImpl_1 = require("./typorm/repository/ProductRepositoryImpl");
 const config_1 = require("@nestjs/config");
+const RoleModelConverter_1 = require("./typorm/adapter/RoleModelConverter");
+const RoleModelRestorer_1 = require("./typorm/adapter/RoleModelRestorer");
+const RoleModel_1 = require("./typorm/model/RoleModel");
+const UserModel_1 = require("./typorm/model/UserModel");
+const UserRoleModel_1 = require("./typorm/model/UserRoleModel");
+const RefreshTokenModel_1 = require("./typorm/model/RefreshTokenModel");
+const UserModelConverter_1 = require("./typorm/adapter/UserModelConverter");
+const UserModelRestorer_1 = require("./typorm/adapter/UserModelRestorer");
+const RoleRepositoryImpl_1 = require("./typorm/repository/RoleRepositoryImpl");
+const UserRepositoryImpl_1 = require("./typorm/repository/UserRepositoryImpl");
 /**
  * インフラストラクチャ層のモジュール定義
  * - データベース接続情報
@@ -49,7 +59,15 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
                     username: configService.get("DB_USERNAME"), // ユーザー名
                     password: configService.get("DB_PASSWORD"), // パスワード
                     database: configService.get("DB_DATABASE"), // データベース名
-                    entities: [ProductModel_1.ProductModel, CategoryModel_1.CategoryModel], // 利用するエンティティ
+                    // 利用するエンティティ
+                    entities: [
+                        ProductModel_1.ProductModel,
+                        CategoryModel_1.CategoryModel,
+                        RoleModel_1.RoleModel,
+                        UserModel_1.UserModel,
+                        UserRoleModel_1.UserRoleModel,
+                        RefreshTokenModel_1.RefreshTokenModel
+                    ],
                     synchronize: configService.get("DB_SYNCHRONIZE"), // 本番環境では必ずfalseに設定
                     logging: configService.get("DB_LOGGING"), // SQLログの出力を有効化
                 }),
@@ -58,6 +76,10 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
             typeorm_1.TypeOrmModule.forFeature([
                 ProductModel_1.ProductModel,
                 CategoryModel_1.CategoryModel,
+                RoleModel_1.RoleModel,
+                UserModel_1.UserModel,
+                UserRoleModel_1.UserRoleModel,
+                RefreshTokenModel_1.RefreshTokenModel
             ]),
         ],
         providers: [
@@ -91,6 +113,39 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
                 provide: 'ProductRepository',
                 useClass: ProductRepositoryImpl_1.ProductRepositoryImpl,
             },
+            /***********************************/
+            /* 認証・認可機能                   */
+            /***********************************/
+            // RoleエンティティからRoleModelへの変換
+            {
+                provide: 'RoleModelConverter',
+                useClass: RoleModelConverter_1.RoleModelConverter,
+            },
+            // RoleModelからRoleエンティティを復元
+            {
+                provide: 'RoleModelRestorer',
+                useClass: RoleModelRestorer_1.RoleModelRestorer,
+            },
+            // UserエンティティからUserModelへの変換
+            {
+                provide: 'UserModelConverter',
+                useClass: UserModelConverter_1.UserModelConverter,
+            },
+            // UserModelからUserエンティティを復元
+            {
+                provide: 'UserModelRestorer',
+                useClass: UserModelRestorer_1.UserModelRestorer,
+            },
+            // ロールリポジトリ
+            {
+                provide: 'RoleRepository',
+                useClass: RoleRepositoryImpl_1.RoleRepositoryImpl,
+            },
+            // ユーザーリポジトリ
+            {
+                provide: 'UserRepository',
+                useClass: UserRepositoryImpl_1.UserRepositoryImpl,
+            },
         ],
         exports: [
             'CategoryModelConverter',
@@ -99,6 +154,12 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
             'ProductModelRestorer',
             'CategoryRepository',
             'ProductRepository',
+            'RoleModelConverter',
+            'RoleModelRestorer',
+            'UserModelConverter',
+            'UserModelRestorer',
+            'RoleRepository',
+            'UserRepository',
         ],
     })
 ], InfrastructureModule);

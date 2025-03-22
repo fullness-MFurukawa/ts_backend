@@ -2,7 +2,6 @@ import { Product } from "@src/application/domain/model/product/Product";
 import { ProductId } from "@src/application/domain/model/product/ProductId";
 import { ProductName } from "@src/application/domain/model/product/ProductName";
 
-
 /**
  * Productエンティティのリポジトリインターフェイス
  * @author Fullness,Inc.

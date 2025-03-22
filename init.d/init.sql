@@ -103,6 +103,8 @@ CREATE TABLE refresh_tokens (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP /* レコード作成日時 */
 );
 
+
+
 /*
     商品カテゴリ
 */
@@ -145,31 +147,28 @@ INSERT INTO product (obj_id,name,price,category_id) VALUES
 ('dc2e5a33-a2b7-4414-9a53-f9750e7da8ed','無線式キーボード',1900,'c05b1952-3bdf-4449-9b83-d0d123a667ce');
 
 /* ロール */
-INSERT INTO roles (name) VALUES 
-('admin'),
-('user'),
-('guest');
+INSERT INTO roles (id, name) VALUES
+(UUID(), 'admin'),
+(UUID(), 'user'),
+(UUID(), 'guest');
 
 /* ユーザーの作成（パスワードは事前にハッシュ化） */
-/* パスワード:password123 */
-INSERT INTO users (username, password, email, is_active) VALUES 
-('adminUser', '$2b$10$sOMeGeNeRaTeDhAsHVaLuE1234567890ABC', 'admin@example.com', true),
-('normalUser', '$2b$10$sOMeGeNeRaTeDhAsHVaLuE1234567890ABC', 'user@example.com', true),
-('guestUser', '$2b$10$sOMeGeNeRaTeDhAsHVaLuE1234567890ABC', 'guest@example.com', true);
-
+/* パスワード:P@ssw0rd123 */
+INSERT INTO users (id, username, email, password, is_active, created_at, updated_at)
+VALUES
+  (
+    '3d1e89a4-06dc-11f0-9fce-6a0ec65304f1',
+    'testuser',
+    'testuser@example.com',
+    '$2b$10$4VQ2p4KmMfHRkUl0jiP4qeHlNjK2eNYF9fEoNCwKlY8NyTZAMvl6G', -- bcryptでハッシュ化済みの値
+    true,
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP
+  ); 
 /* ユーザーロールの関連付け */
--- adminUser は admin と user の権限を持つ
+-- Userはadmin権限を持つ
 INSERT INTO user_roles (user_id, role_id)
-VALUES 
-((SELECT id FROM users WHERE username = 'adminUser'), (SELECT id FROM roles WHERE name = 'admin')),
-((SELECT id FROM users WHERE username = 'adminUser'), (SELECT id FROM roles WHERE name = 'user'));
-
--- normalUser は user の権限を持つ
-INSERT INTO user_roles (user_id, role_id)
-VALUES 
-((SELECT id FROM users WHERE username = 'normalUser'), (SELECT id FROM roles WHERE name = 'user'));
-
--- guestUser は guest の権限を持つ
-INSERT INTO user_roles (user_id, role_id)
-VALUES 
-((SELECT id FROM users WHERE username = 'guestUser'), (SELECT id FROM roles WHERE name = 'guest'));
+VALUES (
+  '3d1e89a4-06dc-11f0-9fce-6a0ec65304f1',  -- testuser の user_id
+  '3d1de6e4-06dc-11f0-9fce-6a0ec65304f1'   -- admin の role_id
+); 
