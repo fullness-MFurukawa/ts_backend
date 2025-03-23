@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModelConverter = void 0;
 const common_1 = require("@nestjs/common");
 const UserModel_1 = require("../model/UserModel");
+const UserRoleModel_1 = require("../model/UserRoleModel");
 /**
  * UserエンティティをUserModelに変換する
  * @author Fullness,Inc.
@@ -30,8 +31,19 @@ let UserModelConverter = class UserModelConverter {
         model.isActive = source.isUserActive();
         model.createdAt = source.getCreatedAt().getValue();
         model.updatedAt = source.getUpdatedAt().getValue();
-        // userRoles は中間テーブル経由で別途設定するため、ここでは設定しない
-        // model.userRoles = [];
+        // 中間テーブル user_roles の設定
+        const roles = source.getRoles();
+        if (roles && roles.length > 0) {
+            model.userRoles = roles.map(role => {
+                const userRole = new UserRoleModel_1.UserRoleModel();
+                userRole.userId = model.id;
+                userRole.roleId = role.getId().getValue();
+                return userRole;
+            });
+        }
+        else {
+            model.userRoles = []; // 空でも明示的に設定しておくのが安全
+        }
         return model;
     }
     /**

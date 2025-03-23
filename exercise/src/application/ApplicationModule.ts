@@ -5,6 +5,11 @@ import { ProductDTOConverter } from "./in/adapter/ProductDTOConverter";
 import { ProductDTORestorer } from "./in/adapter/ProductDTORestorer";
 import { CategoryInteractor } from "./in/service/CategoryInteractor";
 import { ProductInteractor } from "./in/service/ProductInteractor";
+import { RoleDTOConverter } from "./in/adapter/RoleDTOConverter";
+import { RoleDTORestorer } from "./in/adapter/RoleDTORestorer";
+import { UserDTOConverter } from "./in/adapter/UserDTOConverter";
+import { UserDTORestorer } from "./in/adapter/UserDTORestorer";
+import { RegisterUserInteractor } from "./in/service/RegisterUserInteractor";
 /**
  * サービス層のモジュール定義
  * - 商品カテゴリサービス、商品サービスを登録
@@ -44,13 +49,46 @@ import { ProductInteractor } from "./in/service/ProductInteractor";
             provide:    'ProductUsecase',    
             useClass:   ProductInteractor,     
         },
+        /***********************************/
+        /* 認証・認可機能   2025-03-23      */
+        /***********************************/
+        // RoleエンティティからRoleDTOへ変換する
+        {
+            provide:    'RoleDTOConverter'  ,
+            useClass:   RoleDTOConverter    ,
+        },
+        // RoleDTOからRoleエンティティを復元する
+        {
+            provide:    'RoleDTORestorer'   ,    
+            useClass:   RoleDTORestorer     ,     
+        },
+        // UserエンティティからUserDTOへ変換する
+        {
+            provide:    'UserDTOConverter'  ,
+            useClass:   UserDTOConverter    ,
+        },
+        // UserDTOからUserエンティティを復元する
+        {
+            provide:    'UserDTORestorer'   ,    
+            useClass:   UserDTORestorer     ,     
+        },
+        // ユーザー登録ユースケースインターフェイスの実装
+        {
+            provide:    'RegisterUserUsecase',    
+            useClass:   RegisterUserInteractor,     
+        },
     ],
     exports: [
         'CategoryDTOConverter'  ,  
         'ProductDTOConverter'   , 
         'ProductDTORestorer'    ,  
         'CategoryUsecase'       ,
-        'ProductUsecase'        ,      
+        'ProductUsecase'        ,  
+        'RoleDTOConverter'      ,  
+        'RoleDTORestorer'       ,    
+        'UserDTOConverter'      ,
+        'UserDTORestorer'       , 
+        'RegisterUserUsecase'   ,    
     ]
 })
 export class ApplicationModule {}

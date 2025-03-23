@@ -32,7 +32,9 @@ export class UserModel {
     @UpdateDateColumn({ name: 'updated_at', type: 'timestamp', comment: 'レコード更新日時（自動更新）' })
     updatedAt!: Date;
     // リレーション: ユーザーが持つロール情報（中間テーブル経由）
-    @OneToMany(() => UserRoleModel, userRole => userRole.user)
+    @OneToMany(() => UserRoleModel, userRole => userRole.user, {
+        cascade: true, // 重要
+    })
     userRoles!: UserRoleModel[];
     // リレーション: ユーザーのリフレッシュトークン
     @OneToMany(() => RefreshTokenModel, refreshToken => refreshToken.user)

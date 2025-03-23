@@ -112,14 +112,16 @@ let ProductInteractor = class ProductInteractor {
      * @throws InternalError 内部エラー
      */
     async register(product) {
-        try {
-            const newProduct = await this.productRestorer.restore(product);
-            await this.repository.create(newProduct, this.manager);
-        }
-        catch (error) {
-            this.logger.error(`register() 失敗: ${error}`, error);
-            throw new InternalException_1.InternalException(`商品(${product.name})の登録に失敗しました。`);
-        }
+        await this.manager.transaction(async (manager) => {
+            try {
+                const newProduct = await this.productRestorer.restore(product);
+                await this.repository.create(newProduct, manager);
+            }
+            catch (error) {
+                this.logger.error(`register() 失敗: ${error}`, error);
+                throw new InternalException_1.InternalException(`商品(${product.name})の登録に失敗しました。`);
+            }
+        });
     }
     /**
      * 商品名または単価を変更する
@@ -128,19 +130,21 @@ let ProductInteractor = class ProductInteractor {
      * @throws InternalError 内部エラー
      */
     async modify(product) {
-        try {
-            var updateProduct = await this.productRestorer.restore(product);
-            var result = await this.repository.updateById(updateProduct, this.manager);
-            if (!result) {
-                throw new NotFoundException_1.NotFoundException(`商品Id:(${product.id})の商品は存在しないため変更できませんでした。`);
+        await this.manager.transaction(async (manager) => {
+            try {
+                var updateProduct = await this.productRestorer.restore(product);
+                var result = await this.repository.updateById(updateProduct, manager);
+                if (!result) {
+                    throw new NotFoundException_1.NotFoundException(`商品Id:(${product.id})の商品は存在しないため変更できませんでした。`);
+                }
             }
-        }
-        catch (error) {
-            if (error instanceof NotFoundException_1.NotFoundException)
-                throw error;
-            this.logger.error(`modify() 失敗: ${error}`, error);
-            throw new InternalException_1.InternalException(`商品Id(${product.id})の変更に失敗しました。`);
-        }
+            catch (error) {
+                if (error instanceof NotFoundException_1.NotFoundException)
+                    throw error;
+                this.logger.error(`modify() 失敗: ${error}`, error);
+                throw new InternalException_1.InternalException(`商品Id(${product.id})の変更に失敗しました。`);
+            }
+        });
     }
     /**
      * 商品を削除する
@@ -149,18 +153,20 @@ let ProductInteractor = class ProductInteractor {
      * @throws InternalException 内部エラー
      */
     async delete(id) {
-        try {
-            var result = await this.repository.deleteById(ProductId_1.ProductId.fromString(id), this.manager);
-            if (!result) {
-                throw new NotFoundException_1.NotFoundException(`商品Id:(${id})の商品は存在しないため削除できませんでした。`);
+        await this.manager.transaction(async (manager) => {
+            try {
+                var result = await this.repository.deleteById(ProductId_1.ProductId.fromString(id), this.manager);
+                if (!result) {
+                    throw new NotFoundException_1.NotFoundException(`商品Id:(${id})の商品は存在しないため削除できませんでした。`);
+                }
             }
-        }
-        catch (error) {
-            if (error instanceof NotFoundException_1.NotFoundException)
-                throw error;
-            this.logger.error(`delete() 失敗: ${error}`, error);
-            throw new InternalException_1.InternalException(`商品Id(${id})の削除に失敗しました。`);
-        }
+            catch (error) {
+                if (error instanceof NotFoundException_1.NotFoundException)
+                    throw error;
+                this.logger.error(`delete() 失敗: ${error}`, error);
+                throw new InternalException_1.InternalException(`商品Id(${id})の削除に失敗しました。`);
+            }
+        });
     }
 };
 exports.ProductInteractor = ProductInteractor;

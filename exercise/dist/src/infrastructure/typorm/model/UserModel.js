@@ -51,7 +51,9 @@ __decorate([
     __metadata("design:type", Date)
 ], UserModel.prototype, "updatedAt", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => UserRoleModel_1.UserRoleModel, userRole => userRole.user),
+    (0, typeorm_1.OneToMany)(() => UserRoleModel_1.UserRoleModel, userRole => userRole.user, {
+        cascade: true, // 重要
+    }),
     __metadata("design:type", Array)
 ], UserModel.prototype, "userRoles", void 0);
 __decorate([

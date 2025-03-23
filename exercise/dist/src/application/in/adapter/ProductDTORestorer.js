@@ -24,7 +24,7 @@ const ProductPrice_1 = require("../../domain/model/product/ProductPrice");
 let ProductDTORestorer = class ProductDTORestorer {
     /**
      * ProductDTOからProductエンティティを復元する
-     * @param source ProductInput
+     * @param source ProductDTO
      */
     async restore(source) {
         const category = this.createCategoryIfNeeded(source.category);
@@ -59,7 +59,7 @@ let ProductDTORestorer = class ProductDTORestorer {
     }
     /**
      * 既存のProductを復元する
-     * @param source ProductInput
+     * @param source ProductDTO
      * @param category Category | null
      * @returns Product
      */

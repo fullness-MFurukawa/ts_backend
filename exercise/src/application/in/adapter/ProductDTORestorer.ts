@@ -20,7 +20,7 @@ import { CategoryDTO } from "../dto/CategoryDTO";
 export class ProductDTORestorer implements Restorer<ProductDTO , Product> {
     /**
      * ProductDTOからProductエンティティを復元する
-     * @param source ProductInput
+     * @param source ProductDTO
      */
     async restore(source: ProductDTO): Promise<Product> {
         const category = this.createCategoryIfNeeded(source.category);
@@ -61,7 +61,7 @@ export class ProductDTORestorer implements Restorer<ProductDTO , Product> {
     }
     /**
      * 既存のProductを復元する
-     * @param source ProductInput
+     * @param source ProductDTO
      * @param category Category | null
      * @returns Product
      */
