@@ -10,6 +10,8 @@ import { RoleDTORestorer } from "./in/adapter/RoleDTORestorer";
 import { UserDTOConverter } from "./in/adapter/UserDTOConverter";
 import { UserDTORestorer } from "./in/adapter/UserDTORestorer";
 import { RegisterUserInteractor } from "./in/service/RegisterUserInteractor";
+import { AuthenticateUserInteractor } from "./in/service/AuthenticateUserInteractor";
+import { JwtModule } from "@nestjs/jwt";
 /**
  * サービス層のモジュール定義
  * - 商品カテゴリサービス、商品サービスを登録
@@ -22,6 +24,7 @@ import { RegisterUserInteractor } from "./in/service/RegisterUserInteractor";
 @Module({
     imports: [
         InfrastructureModule, // インフラストラクチャ層のモジュールをインポート
+        JwtModule, 
     ],
     providers: [
         // CategoryエンティティからCategoryDTOへ変換する
@@ -77,18 +80,24 @@ import { RegisterUserInteractor } from "./in/service/RegisterUserInteractor";
             provide:    'RegisterUserUsecase',    
             useClass:   RegisterUserInteractor,     
         },
+        // ユーザー認証ユースケースインターフェイスの実装
+        {
+            provide:    'AuthenticateUserUsecase' ,
+            useClass:   AuthenticateUserInteractor,
+        },
     ],
     exports: [
-        'CategoryDTOConverter'  ,  
-        'ProductDTOConverter'   , 
-        'ProductDTORestorer'    ,  
-        'CategoryUsecase'       ,
-        'ProductUsecase'        ,  
-        'RoleDTOConverter'      ,  
-        'RoleDTORestorer'       ,    
-        'UserDTOConverter'      ,
-        'UserDTORestorer'       , 
-        'RegisterUserUsecase'   ,    
+        'CategoryDTOConverter'      ,  
+        'ProductDTOConverter'       , 
+        'ProductDTORestorer'        ,  
+        'CategoryUsecase'           ,
+        'ProductUsecase'            ,  
+        'RoleDTOConverter'          ,  
+        'RoleDTORestorer'           ,    
+        'UserDTOConverter'          ,
+        'UserDTORestorer'           , 
+        'RegisterUserUsecase'       ,
+        'AuthenticateUserUsecase'   ,    
     ]
 })
 export class ApplicationModule {}

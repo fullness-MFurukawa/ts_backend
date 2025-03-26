@@ -37,12 +37,28 @@ let RegisterUserInteractor = class RegisterUserInteractor {
      * @param userRepository UserRepositoryインターフェイス
      * @param roleRepository RoleRepositoryインターフェイス
      */
-    constructor(entityManager, userRestorer, userRepository, roleRepository) {
+    constructor(entityManager, userRestorer, roleConverter, userRepository, roleRepository) {
         this.entityManager = entityManager;
         this.userRestorer = userRestorer;
+        this.roleConverter = roleConverter;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.logger = new common_1.Logger('RegisterUserInteractor');
+    }
+    /**
+     * 利用可能なロールを取得する
+     * @throws InternalException その他内部エラー
+     * @returns RoleDTOの配列
+     */
+    async fetchRoles() {
+        try {
+            const roles = await this.roleRepository.findAll(this.entityManager);
+            return await this.roleConverter.convertAll(roles);
+        }
+        catch (error) {
+            this.logger.error(`fetchRoles() 失敗: ${error}`, error);
+            throw new InternalException_1.InternalException('すべての利用可能なロールの取得に失敗しました。');
+        }
     }
     /**
      * ユーザーを新規登録する
@@ -109,7 +125,8 @@ exports.RegisterUserInteractor = RegisterUserInteractor = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectEntityManager)()),
     __param(1, (0, common_1.Inject)('UserDTORestorer')),
-    __param(2, (0, common_1.Inject)('UserRepository')),
-    __param(3, (0, common_1.Inject)('RoleRepository')),
-    __metadata("design:paramtypes", [typeorm_2.EntityManager, Object, Object, Object])
+    __param(2, (0, common_1.Inject)('RoleDTOConverter')),
+    __param(3, (0, common_1.Inject)('UserRepository')),
+    __param(4, (0, common_1.Inject)('RoleRepository')),
+    __metadata("design:paramtypes", [typeorm_2.EntityManager, Object, Object, Object, Object])
 ], RegisterUserInteractor);

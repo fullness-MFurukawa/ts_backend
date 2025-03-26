@@ -13,6 +13,9 @@ import { Email } from "@src/application/domain/model/user/Email";
 import { RoleName } from "@src/application/domain/model/role/RoleName";
 import { NotFoundException } from "@src/shared/exceptions/NotFoundException";
 import { InternalException } from "@src/shared/exceptions/InternalException";
+import { RoleDTO } from "../dto/RoleDTO";
+import { Role } from "@src/application/domain/model/role/Role";
+import { Converter } from "@src/shared/adapter/Converter";
 
 /**
  * RegisterUserUsecaseインターフェイスの実装
@@ -37,11 +40,28 @@ export class RegisterUserInteractor implements RegisterUserUsecase {
         private readonly entityManager: EntityManager,
         @Inject('UserDTORestorer')
         private readonly userRestorer: Restorer<UserDTO, User>,
+        @Inject('RoleDTOConverter')
+        private readonly roleConverter: Converter<Role , RoleDTO>,
         @Inject('UserRepository')
         private readonly userRepository: UserRepository<EntityManager>,
         @Inject('RoleRepository')
         private readonly roleRepository: RoleRepository<EntityManager>){}
     
+    /**
+     * 利用可能なロールを取得する
+     * @throws InternalException その他内部エラー
+     * @returns RoleDTOの配列
+     */    
+    async fetchRoles(): Promise<RoleDTO[]> {
+        try{
+            const roles = await this.roleRepository.findAll(this.entityManager);
+            return await this.roleConverter.convertAll(roles!);
+        }catch(error){
+            this.logger.error(`fetchRoles() 失敗: ${error}` , error);
+            throw new InternalException('すべての利用可能なロールの取得に失敗しました。');
+        }
+    }
+
     /**
      * ユーザーを新規登録する
      * @param dto UserDTO（入力データ）
@@ -69,7 +89,7 @@ export class RegisterUserInteractor implements RegisterUserUsecase {
             }
         });
     }
-
+    
     /**
      * ユーザー名とメールアドレスの重複チェック
      * @param dto UserDTO

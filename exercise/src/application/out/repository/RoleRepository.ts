@@ -11,6 +11,12 @@ import { RoleName } from "@src/application/domain/model/role/RoleName";
  */
 export interface RoleRepository<T> {
     /**
+     * 利用可能なすべてのロールを取得する
+     * @param manager? 任意のトランザクション用EntityManager
+     * @returns Roleの配列、存在しない場合は null
+     */
+    findAll(manager?: T): Promise<Role[] | null>;
+    /**
      * ロール名でロールを検索する
      * @param roleName 検索対象のロール名
      * @param manager? 任意のトランザクション用EntityManager

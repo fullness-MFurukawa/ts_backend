@@ -149,7 +149,7 @@ import { UserRepositoryImpl } from "./typorm/repository/UserRepositoryImpl";
         'UserModelConverter'    ,
         'UserModelRestorer'     ,
         'RoleRepository'        ,
-        'UserRepository'            ,
+        'UserRepository'        ,
     ],
 })
 export class InfrastructureModule {}

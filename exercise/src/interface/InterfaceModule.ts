@@ -5,6 +5,7 @@ import { RegisterProductParamConverter } from "./rest/adapter/RegisterProductPar
 import { ProductRegisterRESTController } from "./rest/controller/ProductRegisterRESTController";
 import { ModifyProductParamConverter } from "./rest/adapter/ModifyProductParamComverter";
 import { ProductModifyRESTController } from "./rest/controller/ProductModifyRESTController";
+import { RegisterUserController } from "./rest/controller/auth/RegisterUserController";
 
 /**
  * インターフェイス層のモジュール定義
@@ -22,6 +23,7 @@ import { ProductModifyRESTController } from "./rest/controller/ProductModifyREST
         ProductKeywordSearchRESTController  , // 商品キーワード検索:RESTAPIコントローラ
         ProductRegisterRESTController       , // 商品登録:RESTAPIコントローラ
         ProductModifyRESTController         , // 既存商品の変更RESTAPIコントローラ
+        RegisterUserController              , // ユーザー登録コントローラ    
     ],
     providers:[
         // RegisterProductParamからProductDTOへの変換

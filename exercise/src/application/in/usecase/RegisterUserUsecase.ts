@@ -1,3 +1,4 @@
+import { RoleDTO } from "../dto/RoleDTO";
 import { UserDTO } from "../dto/UserDTO";
 
 /**
@@ -16,4 +17,10 @@ export interface RegisterUserUsecase {
      * @throws InternalException その他内部エラー
      */
     register(dto: UserDTO): Promise<void>;
+    /**
+     * 利用可能なロールを取得する
+     * @throws InternalException その他内部エラー
+     * @returns RoleDTOの配列
+     */
+    fetchRoles(): Promise<RoleDTO[]>;
 }

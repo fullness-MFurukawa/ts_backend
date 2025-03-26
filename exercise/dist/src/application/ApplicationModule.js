@@ -19,6 +19,8 @@ const RoleDTORestorer_1 = require("./in/adapter/RoleDTORestorer");
 const UserDTOConverter_1 = require("./in/adapter/UserDTOConverter");
 const UserDTORestorer_1 = require("./in/adapter/UserDTORestorer");
 const RegisterUserInteractor_1 = require("./in/service/RegisterUserInteractor");
+const AuthenticateUserInteractor_1 = require("./in/service/AuthenticateUserInteractor");
+const jwt_1 = require("@nestjs/jwt");
 /**
  * サービス層のモジュール定義
  * - 商品カテゴリサービス、商品サービスを登録
@@ -35,6 +37,7 @@ exports.ApplicationModule = ApplicationModule = __decorate([
     (0, common_1.Module)({
         imports: [
             InfrastructureModule_1.InfrastructureModule, // インフラストラクチャ層のモジュールをインポート
+            jwt_1.JwtModule,
         ],
         providers: [
             // CategoryエンティティからCategoryDTOへ変換する
@@ -90,6 +93,11 @@ exports.ApplicationModule = ApplicationModule = __decorate([
                 provide: 'RegisterUserUsecase',
                 useClass: RegisterUserInteractor_1.RegisterUserInteractor,
             },
+            // ユーザー認証ユースケースインターフェイスの実装
+            {
+                provide: 'AuthenticateUserUsecase',
+                useClass: AuthenticateUserInteractor_1.AuthenticateUserInteractor,
+            },
         ],
         exports: [
             'CategoryDTOConverter',
@@ -102,6 +110,7 @@ exports.ApplicationModule = ApplicationModule = __decorate([
             'UserDTOConverter',
             'UserDTORestorer',
             'RegisterUserUsecase',
+            'AuthenticateUserUsecase',
         ]
     })
 ], ApplicationModule);

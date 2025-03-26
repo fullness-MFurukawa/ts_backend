@@ -21,6 +21,15 @@ export class Password {
     }
 
     /**
+     * 平文パスワードからPasswordを生成する
+     * @param plainPassword 平文のパスワード
+     * @returns Passwordのインスタンス
+     */
+    static fromPlain(plainPassword: string): Password {
+        return new Password(plainPassword);
+    }
+
+    /**
      * 既にハッシュ化されたパスワードからPasswordを生成する
      * @param hashedPassword ハッシュ化されたパスワード
      * @returns Passwordのインスタンス

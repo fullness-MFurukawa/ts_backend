@@ -33,6 +33,20 @@ export class RoleRepositoryImpl implements RoleRepository<EntityManager> {
     ){}
 
     /**
+     * 利用可能なすべてのロールを取得する
+     * @param manager? 任意のトランザクション用EntityManager
+     * @returns Roleの配列、存在しない場合は null
+     */
+    async findAll(manager?: EntityManager | undefined): Promise<Role[] | null>{
+        const repo = manager ? manager.getRepository(RoleModel) : this.repository;
+        var models = await repo.find();
+        if (! models){
+            return null;
+        }
+        return await this.restorer.restoreAll(models);
+    }
+
+    /**
      * 指定されたロール名でロールを検索する
      * @param roleName 検索対象のロール名
      * @param manager 任意のEntityManager（トランザクション用）

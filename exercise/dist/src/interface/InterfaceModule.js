@@ -14,6 +14,7 @@ const RegisterProductParamConverter_1 = require("./rest/adapter/RegisterProductP
 const ProductRegisterRESTController_1 = require("./rest/controller/ProductRegisterRESTController");
 const ModifyProductParamComverter_1 = require("./rest/adapter/ModifyProductParamComverter");
 const ProductModifyRESTController_1 = require("./rest/controller/ProductModifyRESTController");
+const RegisterUserController_1 = require("./rest/controller/auth/RegisterUserController");
 /**
  * インターフェイス層のモジュール定義
  * - 商品カテゴリサービス、商品サービスを登録
@@ -34,6 +35,7 @@ exports.InterfaceModule = InterfaceModule = __decorate([
             ProductKeywordSearchRESTController_1.ProductKeywordSearchRESTController, // 商品キーワード検索:RESTAPIコントローラ
             ProductRegisterRESTController_1.ProductRegisterRESTController, // 商品登録:RESTAPIコントローラ
             ProductModifyRESTController_1.ProductModifyRESTController, // 既存商品の変更RESTAPIコントローラ
+            RegisterUserController_1.RegisterUserController, // ユーザー登録コントローラ    
         ],
         providers: [
             // RegisterProductParamからProductDTOへの変換
