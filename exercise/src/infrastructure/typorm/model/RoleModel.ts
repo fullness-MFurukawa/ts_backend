@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import { UserRoleModel } from "./UserRoleModel";
 
 /**
@@ -27,4 +27,9 @@ export class RoleModel {
     // ロールに関連付けられたユーザー情報（中間テーブル経由）
     @OneToMany(() => UserRoleModel, userRole => userRole.role)
     userRoles!: UserRoleModel[];
+
+    // 親ロール（継承元）を参照する自己参照の多対一関係
+    @ManyToOne(() => RoleModel, { nullable: true })
+    @JoinColumn({ name: 'inherits_from' }) // DB上のカラム名
+    inheritsFrom?: RoleModel | null;
 }

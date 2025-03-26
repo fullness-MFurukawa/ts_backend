@@ -35,8 +35,10 @@ CREATE TABLE roles (
     id CHAR(36) NOT NULL PRIMARY KEY COMMENT 'ロールID（UUID形式）',
     name VARCHAR(100) NOT NULL UNIQUE COMMENT 'ロール名（Admin, User, Guestなど）',
     description VARCHAR(255) COMMENT 'ロールの説明',
+    inherits_from CHAR(36) NULL COMMENT '継承元のロールID',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'レコード作成日時',
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'レコード更新日時（自動更新）'
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'レコード更新日時（自動更新）',
+    CONSTRAINT fk_inherits_from FOREIGN KEY (inherits_from) REFERENCES roles(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='ロール情報テーブル';
 -- ユーザーとロールを紐づける中間テーブル
 CREATE TABLE user_roles (
@@ -85,15 +87,18 @@ CREATE TABLE users (
 );
 /* ロールテーブル作成 */
 CREATE TABLE roles (
-    id SERIAL PRIMARY KEY, /* ロールId(主キー、自動インクリメント) */
-    name VARCHAR(50) UNIQUE NOT NULL /* ロール名(ユニーク) */
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL,
+    inherits_from INT REFERENCES roles(id) ON DELETE SET NULL
 );
+
 /* ユーザーロールテーブル作成 */
 CREATE TABLE user_roles (
     user_id INT REFERENCES users(id) ON DELETE CASCADE, /* ユーザーId(外部キー) */
     role_id INT REFERENCES roles(id) ON DELETE CASCADE, /* ロールId(外部キー) */
     PRIMARY KEY (user_id, role_id)
 );
+
 /* リフレッシュトークン管理テーブル作成 */
 CREATE TABLE refresh_tokens (
     id SERIAL PRIMARY KEY, /* トークンId(主キー、自動インクリメント) */
@@ -147,10 +152,16 @@ INSERT INTO product (obj_id,name,price,category_id) VALUES
 ('dc2e5a33-a2b7-4414-9a53-f9750e7da8ed','無線式キーボード',1900,'c05b1952-3bdf-4449-9b83-d0d123a667ce');
 
 /* ロール */
-INSERT INTO roles (id, name) VALUES
-(UUID(), 'admin'),
-(UUID(), 'user'),
-(UUID(), 'guest');
+-- Guest（最下層、親なし）
+INSERT INTO roles (id, name, description, inherits_from)
+VALUES ('3d1e446b-06dc-11f0-9fce-6a0ec65304f1', 'Guest', '閲覧専用のゲストユーザー', NULL);
+-- User（Guestを継承）
+INSERT INTO roles (id, name, description, inherits_from)
+VALUES ('3d1e3fd4-06dc-11f0-9fce-6a0ec65304f1', 'User', '標準的なユーザー権限', '3d1e446b-06dc-11f0-9fce-6a0ec65304f1');
+-- Admin（Userを継承）
+INSERT INTO roles (id, name, description, inherits_from)
+VALUES ('3d1de6e4-06dc-11f0-9fce-6a0ec65304f1', 'Admin', '管理者権限を持つユーザー', '3d1e3fd4-06dc-11f0-9fce-6a0ec65304f1');
+
 
 /* ユーザーの作成（パスワードは事前にハッシュ化） */
 /* パスワード:P@ssw0rd123 */

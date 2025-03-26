@@ -114,4 +114,30 @@ describe("RoleRepositoryImplの単体テスト", () => {
             }
         });
     });
+    describe("findAllInheritedRoles()メソッド", () => {
+        it("Adminロールを指定した場合、Admin, User, Guestが含まれる", async () => {
+            const roleName = RoleName_1.RoleName.fromString("admin");
+            const roles = await repository.findAllInheritedRoles(roleName);
+            const roleNames = roles.map(r => r.getName().getValue()).sort();
+            console.log(roleNames);
+            expect(roleNames).toEqual(["admin", "guest", "user"]);
+        });
+        it("Userロールを指定した場合、User, Guestが含まれる", async () => {
+            const roleName = RoleName_1.RoleName.fromString("user");
+            const roles = await repository.findAllInheritedRoles(roleName);
+            const roleNames = roles.map(r => r.getName().getValue()).sort();
+            expect(roleNames).toEqual(["guest", "user"]);
+        });
+        it("Guestロールを指定した場合、Guestのみ含まれる", async () => {
+            const roleName = RoleName_1.RoleName.fromString("guest");
+            const roles = await repository.findAllInheritedRoles(roleName);
+            const roleNames = roles.map(r => r.getName().getValue()).sort();
+            expect(roleNames).toEqual(["guest"]);
+        });
+        it("存在しないロールを指定した場合、空配列が返される", async () => {
+            const roleName = RoleName_1.RoleName.fromString("nonexistent");
+            const roles = await repository.findAllInheritedRoles(roleName);
+            expect(roles).toEqual([]);
+        });
+    });
 });

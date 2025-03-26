@@ -17,6 +17,15 @@ export interface RoleRepository<T> {
      */
     findAll(manager?: T): Promise<Role[] | null>;
     /**
+     * 指定されたロールが継承しているすべてのロールを取得する
+     * - 例: Admin → User → Guest のように継承されている場合、Admin を指定すると全てを取得
+     * - 再帰的に親ロールをたどる
+     * @param roleName 選択されたロール名
+     * @param manager EntityManager（任意）
+     * @returns 継承されたすべてのロールを含む配列（選択されたロール自身も含む）
+     */
+    findAllInheritedRoles(roleName: RoleName, manager?: T): Promise<Role[]>
+    /**
      * ロール名でロールを検索する
      * @param roleName 検索対象のロール名
      * @param manager? 任意のトランザクション用EntityManager

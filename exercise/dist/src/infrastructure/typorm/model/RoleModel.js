@@ -44,6 +44,12 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => UserRoleModel_1.UserRoleModel, userRole => userRole.role),
     __metadata("design:type", Array)
 ], RoleModel.prototype, "userRoles", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => RoleModel, { nullable: true }),
+    (0, typeorm_1.JoinColumn)({ name: 'inherits_from' }) // DB上のカラム名
+    ,
+    __metadata("design:type", Object)
+], RoleModel.prototype, "inheritsFrom", void 0);
 exports.RoleModel = RoleModel = __decorate([
     (0, typeorm_1.Entity)('roles'),
     __metadata("design:paramtypes", [String, String])
