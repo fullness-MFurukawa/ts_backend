@@ -64,6 +64,7 @@ let AuthenticateUserInteractor = class AuthenticateUserInteractor {
         const payload = {
             sub: user.getId().getValue(),
             username: user.getUsername().getValue(),
+            roles: user.getRoles().map(role => role.getName().getValue()),
         };
         // 環境変数からトークンの有効期限を取得する
         const expiresIn = this.configService.get('JWT_EXPIRES_IN', '1h');

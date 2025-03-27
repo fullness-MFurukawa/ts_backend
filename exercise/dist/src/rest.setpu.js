@@ -44,7 +44,15 @@ async function setupRestServer(app) {
             .setTitle("マイクロサービスハンズオン:TypeScript編 商品管理API") // APIのタイトル
             .setDescription("商品管理APIのエンドポイント一覧") // 説明
             .setVersion("1.0.0") // バージョン
-            .addTag("products") // タグ（カテゴリ分け用）
+            .addTag("商品管理機能と認証機能") // タグ（カテゴリ分け用）
+            .addBearerAuth({
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            name: 'Authorization',
+            in: 'header',
+        }, 'access-token' // ← この名前は任意ですがコントローラ側と一致させたい場合は指定
+        )
             .build();
         const document = swagger_1.SwaggerModule.createDocument(app, config);
         swagger_1.SwaggerModule.setup("api", app, document); // "/api" でSwagger UIを表示

@@ -21,6 +21,7 @@ const UserDTORestorer_1 = require("./in/adapter/UserDTORestorer");
 const RegisterUserInteractor_1 = require("./in/service/RegisterUserInteractor");
 const AuthenticateUserInteractor_1 = require("./in/service/AuthenticateUserInteractor");
 const jwt_1 = require("@nestjs/jwt");
+const jwt_strategy_1 = require("../interface/rest/controller/auth/jwt.strategy");
 /**
  * サービス層のモジュール定義
  * - 商品カテゴリサービス、商品サービスを登録
@@ -98,6 +99,7 @@ exports.ApplicationModule = ApplicationModule = __decorate([
                 provide: 'AuthenticateUserUsecase',
                 useClass: AuthenticateUserInteractor_1.AuthenticateUserInteractor,
             },
+            jwt_strategy_1.JwtStrategy, //
         ],
         exports: [
             'CategoryDTOConverter',

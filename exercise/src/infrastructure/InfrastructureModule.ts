@@ -53,10 +53,10 @@ import { UserRepositoryImpl } from "./typorm/repository/UserRepositoryImpl";
                 entities: [
                     ProductModel, 
                     CategoryModel,
-                    //RoleModel,
-                    //UserModel,
-                    // UserRoleModel,
-                    // RefreshTokenModel
+                    RoleModel,
+                    UserModel,
+                    UserRoleModel,
+                    RefreshTokenModel
                 ],
                 synchronize: configService.get<boolean>("DB_SYNCHRONIZE"),// 本番環境では必ずfalseに設定
                 logging: configService.get<boolean>("DB_LOGGING"),// SQLログの出力を有効化
@@ -66,10 +66,10 @@ import { UserRepositoryImpl } from "./typorm/repository/UserRepositoryImpl";
         TypeOrmModule.forFeature([
             ProductModel, 
             CategoryModel,
-            //RoleModel,
-            //UserModel,
-            // UserRoleModel,
-            // RefreshTokenModel
+            RoleModel,
+            UserModel,
+            UserRoleModel,
+            RefreshTokenModel
         ]),
     ],
     providers: [

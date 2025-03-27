@@ -7,7 +7,7 @@ import { UserRoleModel } from "./UserRoleModel";
  * @date 2025-03-21
  * @version 1.0.0
  */
-//@Entity('roles')
+@Entity('roles')
 export class RoleModel {
     /**
      * コンストラクタ
@@ -22,7 +22,7 @@ export class RoleModel {
     @PrimaryColumn({ type: 'char', length: 36, comment: 'ロールID（UUID形式）' })
     id!: string;
     // ロール名（例: Admin, User, Guestなど）
-    @Column({ type: 'varchar', length: 100, unique: true, comment: 'ロール名（Admin, Userなど）' })
+    @Column({ type: 'varchar', length: 30, unique: true, comment: 'ロール名（Admin, Userなど）' })
     name!: string;
     // ロールに関連付けられたユーザー情報（中間テーブル経由）
     @OneToMany(() => UserRoleModel, userRole => userRole.role)

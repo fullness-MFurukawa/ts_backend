@@ -1,8 +1,9 @@
-import { Controller, Get, Inject, Logger, Query, ValidationPipe } from "@nestjs/common";
+import { Controller, Get, Inject, Logger, Query, UseGuards, ValidationPipe } from "@nestjs/common";
 import { KeywordSearchParam } from "../param/KeywordSearchParam";
 import { ProductDTO } from "@src/application/in/dto/ProductDTO";
 import { ProductUsecase } from "@src/application/in/usecase/ProductUsecase";
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { AuthGuard } from "@nestjs/passport";
 
 /**
  * 商品キーワード検索RESTAPIコントローラ
@@ -11,6 +12,7 @@ import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
  * @version 1.0.0
  */
 @ApiTags("商品キーワード検索") // Swagger UIでカテゴリ表示
+@ApiBearerAuth('access-token') // Swaggerの「Authorize」ボタンを有効にするため
 @Controller('products/search')
 export class ProductKeywordSearchRESTController {
     private readonly logger = new Logger(ProductKeywordSearchRESTController.name);
@@ -30,6 +32,7 @@ export class ProductKeywordSearchRESTController {
     @ApiQuery({ name: "keyword", required: true, description: "検索する商品キーワード" })
     @ApiResponse({ status: 200, description: "成功", type: [ProductDTO] })
     @ApiResponse({ status: 404, description: "商品が見つからない" })
+    @UseGuards(AuthGuard('jwt')) // ← JWT認証が必要に！
     @Get()
     async searchByKeyword(
     @Query(new ValidationPipe({ transform: true })) param: KeywordSearchParam): Promise<ProductDTO[]> {

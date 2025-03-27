@@ -15,6 +15,9 @@ const ProductRegisterRESTController_1 = require("./rest/controller/ProductRegist
 const ModifyProductParamComverter_1 = require("./rest/adapter/ModifyProductParamComverter");
 const ProductModifyRESTController_1 = require("./rest/controller/ProductModifyRESTController");
 const RegisterUserController_1 = require("./rest/controller/auth/RegisterUserController");
+const RegisterUserParamToConverter_1 = require("./rest/adapter/RegisterUserParamToConverter");
+const AuthenticateParamConverter_1 = require("./rest/adapter/AuthenticateParamConverter");
+const AuthenticateController_1 = require("./rest/controller/auth/AuthenticateController");
 /**
  * インターフェイス層のモジュール定義
  * - 商品カテゴリサービス、商品サービスを登録
@@ -35,7 +38,8 @@ exports.InterfaceModule = InterfaceModule = __decorate([
             ProductKeywordSearchRESTController_1.ProductKeywordSearchRESTController, // 商品キーワード検索:RESTAPIコントローラ
             ProductRegisterRESTController_1.ProductRegisterRESTController, // 商品登録:RESTAPIコントローラ
             ProductModifyRESTController_1.ProductModifyRESTController, // 既存商品の変更RESTAPIコントローラ
-            RegisterUserController_1.RegisterUserController, // ユーザー登録コントローラ    
+            RegisterUserController_1.RegisterUserController, // ユーザー登録RESTAPIコントローラ 
+            AuthenticateController_1.AuthenticateController, // 認証RESTAPIコントローラ  
         ],
         providers: [
             // RegisterProductParamからProductDTOへの変換
@@ -48,10 +52,27 @@ exports.InterfaceModule = InterfaceModule = __decorate([
                 provide: 'ModifyProductParamConverter',
                 useClass: ModifyProductParamComverter_1.ModifyProductParamConverter,
             },
+            // ModifyProductParamからProductDTOへの変換
+            {
+                provide: 'ModifyProductParamConverter',
+                useClass: ModifyProductParamComverter_1.ModifyProductParamConverter,
+            },
+            // RegisterUserParamからUserDTOへの変換
+            {
+                provide: 'RegisterUserParamConverter',
+                useClass: RegisterUserParamToConverter_1.RegisterUserParamConverter,
+            },
+            // AuthenticateParamからAuthenticateDTOへの変換
+            {
+                provide: 'AuthenticateParamConverter',
+                useClass: AuthenticateParamConverter_1.AuthenticateParamConverter,
+            },
         ],
         exports: [
             'RegisterProductParamConverter', // 商品登録パラメータ変換クラス
             'ModifyProductParamConverter', // 商品変更パラメータ変換クラス
+            'RegisterUserParamConverter', // RegisterUserParamからUserDTOへの変換
+            'AuthenticateParamConverter', // AuthenticateParamからAuthenticateDTOへの変換
         ]
     })
 ], InterfaceModule);

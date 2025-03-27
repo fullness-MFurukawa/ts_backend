@@ -56,6 +56,7 @@ HttpExceptionFilter.statusMap = new Map([
     [ExistsException_1.ExistsException, common_1.HttpStatus.BAD_REQUEST], // ExistsException
     [NotFoundException_1.NotFoundException, common_1.HttpStatus.NOT_FOUND], // NotFoundException
     [InternalException_1.InternalException, common_1.HttpStatus.INTERNAL_SERVER_ERROR], // InternalException
+    [common_1.UnauthorizedException, common_1.HttpStatus.UNAUTHORIZED], // 認証失敗
 ]);
 exports.HttpExceptionFilter = HttpExceptionFilter = HttpExceptionFilter_1 = __decorate([
     (0, common_1.Catch)()

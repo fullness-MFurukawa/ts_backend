@@ -58,7 +58,8 @@ export class AuthenticateUserInteractor implements AuthenticateUserUsecase {
         // JWTペイロードと署名を生成する
         const payload = {
             sub: user.getId().getValue(),
-            username: user.getUsername().getValue(),
+            username: user.getUsername().getValue(),    
+            roles: user.getRoles().map(role => role.getName().getValue()),
         };
 
         // 環境変数からトークンの有効期限を取得する

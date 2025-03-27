@@ -3,7 +3,8 @@ import {    ArgumentsHost,
             ExceptionFilter, 
             HttpException, 
             HttpStatus, 
-            Logger } from "@nestjs/common";
+            Logger, 
+            UnauthorizedException} from "@nestjs/common";
 import { DomainException } from "@src/application/domain/exception/DomainException";
 import { ExistsException } from "@src/shared/exceptions/ExistsException";
 import { InternalException } from "@src/shared/exceptions/InternalException";
@@ -28,6 +29,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         [ExistsException, HttpStatus.BAD_REQUEST], // ExistsException
         [NotFoundException, HttpStatus.NOT_FOUND], // NotFoundException
         [InternalException, HttpStatus.INTERNAL_SERVER_ERROR],// InternalException
+        [UnauthorizedException, HttpStatus.UNAUTHORIZED],// 認証失敗
     ]);
 
     catch(exception: any, host: ArgumentsHost) {

@@ -1,4 +1,5 @@
-import { IsArray, IsEmail, IsNotEmpty, IsString, MinLength, ValidateNested } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, MinLength, ValidateNested } from "class-validator";
+import { Type } from "class-transformer";
 import { RoleParam } from "./RoleParam";
 
 /**
@@ -22,10 +23,10 @@ export class RegisterUserParam {
     @MinLength(8, { message: 'パスワードは8文字以上である必要があります。' })
     password: string;
   
-    @IsArray({ message: 'ロールは配列で指定してください。' })
-    @ValidateNested({ each: true })
+    @ValidateNested()
+    @Type(() => RoleParam)
     @IsNotEmpty({ message: 'ロールは必須です。' })
-    roles: RoleParam[];
+    role: RoleParam;
 }
 
 

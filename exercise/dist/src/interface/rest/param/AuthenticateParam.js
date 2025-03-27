@@ -9,39 +9,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RegisterUserParam = void 0;
+exports.AuthenticateParam = void 0;
+const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const class_transformer_1 = require("class-transformer");
-const RoleParam_1 = require("./RoleParam");
 /**
- * ユーザー登録リクエストパラメータ
- * - クライアントからのユーザー登録リクエストを受け取るためのDTO
+ * 認証用リクエストパラメータ
+ * - ユーザー名とパスワードを受け取るDTO
  * @author Fullness,Inc.
- * @date 2025-  03-26
+ * @date 2025-03-27
  * @version 1.0.0
  */
-class RegisterUserParam {
+class AuthenticateParam {
 }
-exports.RegisterUserParam = RegisterUserParam;
+exports.AuthenticateParam = AuthenticateParam;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: 'ユーザー名', example: 'taro123' }),
     (0, class_validator_1.IsNotEmpty)({ message: 'ユーザー名は必須です。' }),
     (0, class_validator_1.IsString)({ message: 'ユーザー名は文字列である必要があります。' }),
     __metadata("design:type", String)
-], RegisterUserParam.prototype, "username", void 0);
+], AuthenticateParam.prototype, "username", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: 'メールアドレスは必須です。' }),
-    (0, class_validator_1.IsEmail)({}, { message: '正しいメールアドレス形式である必要があります。' }),
-    __metadata("design:type", String)
-], RegisterUserParam.prototype, "email", void 0);
-__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'パスワード（8文字以上）', example: 'secret123' }),
     (0, class_validator_1.IsNotEmpty)({ message: 'パスワードは必須です。' }),
     (0, class_validator_1.IsString)({ message: 'パスワードは文字列である必要があります。' }),
     (0, class_validator_1.MinLength)(8, { message: 'パスワードは8文字以上である必要があります。' }),
     __metadata("design:type", String)
-], RegisterUserParam.prototype, "password", void 0);
-__decorate([
-    (0, class_validator_1.ValidateNested)(),
-    (0, class_transformer_1.Type)(() => RoleParam_1.RoleParam),
-    (0, class_validator_1.IsNotEmpty)({ message: 'ロールは必須です。' }),
-    __metadata("design:type", RoleParam_1.RoleParam)
-], RegisterUserParam.prototype, "role", void 0);
+], AuthenticateParam.prototype, "password", void 0);

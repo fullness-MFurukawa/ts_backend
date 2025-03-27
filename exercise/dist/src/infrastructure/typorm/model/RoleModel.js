@@ -18,8 +18,7 @@ const UserRoleModel_1 = require("./UserRoleModel");
  * @date 2025-03-21
  * @version 1.0.0
  */
-//@Entity('roles')
-class RoleModel {
+let RoleModel = class RoleModel {
     /**
      * コンストラクタ
      * @param id    ロールId
@@ -31,14 +30,14 @@ class RoleModel {
         if (name)
             this.name = name;
     }
-}
+};
 exports.RoleModel = RoleModel;
 __decorate([
     (0, typeorm_1.PrimaryColumn)({ type: 'char', length: 36, comment: 'ロールID（UUID形式）' }),
     __metadata("design:type", String)
 ], RoleModel.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 100, unique: true, comment: 'ロール名（Admin, Userなど）' }),
+    (0, typeorm_1.Column)({ type: 'varchar', length: 30, unique: true, comment: 'ロール名（Admin, Userなど）' }),
     __metadata("design:type", String)
 ], RoleModel.prototype, "name", void 0);
 __decorate([
@@ -51,3 +50,7 @@ __decorate([
     ,
     __metadata("design:type", Object)
 ], RoleModel.prototype, "inheritsFrom", void 0);
+exports.RoleModel = RoleModel = __decorate([
+    (0, typeorm_1.Entity)('roles'),
+    __metadata("design:paramtypes", [String, String])
+], RoleModel);

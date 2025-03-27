@@ -5,7 +5,6 @@ import { RoleId } from "@src/application/domain/model/role/RoleId";
 import { RoleName } from "@src/application/domain/model/role/RoleName";
 import { RoleRepository } from "@src/application/out/repository/RoleRepository";
 import { AppModule } from "@src/AppModule";
-import { log } from "console";
 import { DataSource, EntityManager } from "typeorm";
 
 /**
@@ -44,10 +43,10 @@ describe("RoleRepositoryImplの単体テスト", () => {
 
     describe("findByName()メソッド", () => {
         it("存在するロール名で取得できる", async () => {
-            const roleName = RoleName.fromString("admin");
+            const roleName = RoleName.fromString("Admin");
             const role = await repository.findByName(roleName);
             expect(role).not.toBeNull();
-            expect(role!.getName().getValue()).toBe("admin");
+            expect(role!.getName().getValue()).toBe("Admin");
         });
         it("存在しないロール名でfalseを返す", async () => {
             const roleName = RoleName.fromString("unknownrole");
@@ -58,7 +57,7 @@ describe("RoleRepositoryImplの単体テスト", () => {
 
     describe("exists()メソッド", () => {
         it("存在するロール名でtrueを返す", async () => {
-            const roleName = RoleName.fromString("user");
+            const roleName = RoleName.fromString("User");
             const result = await repository.exists(roleName);
             expect(result).toBe(true);
         });
@@ -128,7 +127,6 @@ describe("RoleRepositoryImplの単体テスト", () => {
             const roleName = RoleName.fromString("Admin");
             const roles = await repository.findAllInheritedRoles(roleName);
             const roleNames = roles.map(r => r.getName().getValue()).sort();
-            console.log(roleNames);
             expect(roleNames).toEqual(["Admin", "Guest", "User"]);
         });
         it("Userロールを指定した場合、User, Guestが含まれる", async () => {

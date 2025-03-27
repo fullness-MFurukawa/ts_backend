@@ -19,9 +19,8 @@ const RefreshTokenModel_1 = require("./RefreshTokenModel");
  * @date 2025-03-21
  * @version 1.0.0
  */
-//@Entity('users')
-class UserModel {
-}
+let UserModel = class UserModel {
+};
 exports.UserModel = UserModel;
 __decorate([
     (0, typeorm_1.PrimaryColumn)({ type: 'char', length: 36, comment: 'ユーザーID（UUID形式）' }),
@@ -61,3 +60,6 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => RefreshTokenModel_1.RefreshTokenModel, refreshToken => refreshToken.user),
     __metadata("design:type", Array)
 ], UserModel.prototype, "refreshTokens", void 0);
+exports.UserModel = UserModel = __decorate([
+    (0, typeorm_1.Entity)('users')
+], UserModel);

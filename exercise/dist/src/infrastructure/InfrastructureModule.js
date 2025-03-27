@@ -20,6 +20,10 @@ const ProductRepositoryImpl_1 = require("./typorm/repository/ProductRepositoryIm
 const config_1 = require("@nestjs/config");
 const RoleModelConverter_1 = require("./typorm/adapter/RoleModelConverter");
 const RoleModelRestorer_1 = require("./typorm/adapter/RoleModelRestorer");
+const RoleModel_1 = require("./typorm/model/RoleModel");
+const UserModel_1 = require("./typorm/model/UserModel");
+const UserRoleModel_1 = require("./typorm/model/UserRoleModel");
+const RefreshTokenModel_1 = require("./typorm/model/RefreshTokenModel");
 const UserModelConverter_1 = require("./typorm/adapter/UserModelConverter");
 const UserModelRestorer_1 = require("./typorm/adapter/UserModelRestorer");
 const RoleRepositoryImpl_1 = require("./typorm/repository/RoleRepositoryImpl");
@@ -59,10 +63,10 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
                     entities: [
                         ProductModel_1.ProductModel,
                         CategoryModel_1.CategoryModel,
-                        //RoleModel,
-                        //UserModel,
-                        // UserRoleModel,
-                        // RefreshTokenModel
+                        RoleModel_1.RoleModel,
+                        UserModel_1.UserModel,
+                        UserRoleModel_1.UserRoleModel,
+                        RefreshTokenModel_1.RefreshTokenModel
                     ],
                     synchronize: configService.get("DB_SYNCHRONIZE"), // 本番環境では必ずfalseに設定
                     logging: configService.get("DB_LOGGING"), // SQLログの出力を有効化
@@ -72,10 +76,10 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
             typeorm_1.TypeOrmModule.forFeature([
                 ProductModel_1.ProductModel,
                 CategoryModel_1.CategoryModel,
-                //RoleModel,
-                //UserModel,
-                // UserRoleModel,
-                // RefreshTokenModel
+                RoleModel_1.RoleModel,
+                UserModel_1.UserModel,
+                UserRoleModel_1.UserRoleModel,
+                RefreshTokenModel_1.RefreshTokenModel
             ]),
         ],
         providers: [

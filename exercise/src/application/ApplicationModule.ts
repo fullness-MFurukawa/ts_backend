@@ -12,6 +12,7 @@ import { UserDTORestorer } from "./in/adapter/UserDTORestorer";
 import { RegisterUserInteractor } from "./in/service/RegisterUserInteractor";
 import { AuthenticateUserInteractor } from "./in/service/AuthenticateUserInteractor";
 import { JwtModule } from "@nestjs/jwt";
+import { JwtStrategy } from "@src/interface/rest/controller/auth/jwt.strategy";
 /**
  * サービス層のモジュール定義
  * - 商品カテゴリサービス、商品サービスを登録
@@ -85,6 +86,7 @@ import { JwtModule } from "@nestjs/jwt";
             provide:    'AuthenticateUserUsecase' ,
             useClass:   AuthenticateUserInteractor,
         },
+        JwtStrategy, //
     ],
     exports: [
         'CategoryDTOConverter'      ,  

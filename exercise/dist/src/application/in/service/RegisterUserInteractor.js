@@ -76,6 +76,14 @@ let RegisterUserInteractor = class RegisterUserInteractor {
                 await this.verifyRolesExist(dto, manager);
                 // UserDTOからUserエンティティを復元
                 const user = await this.userRestorer.restore(dto);
+                // 選択されたロールに関連するロールを取得する
+                const roles = await this.roleRepository.findAllInheritedRoles(user.getRoles()[0].getName(), manager);
+                // 関連するロールもUserエンティティに追加する
+                for (const role of roles) {
+                    if (!user.hasRoleByName(role.getName().getValue())) {
+                        user.addRole(role);
+                    }
+                }
                 // ユーザーを永続化する
                 await this.userRepository.create(user, manager);
             }
