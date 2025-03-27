@@ -19,8 +19,9 @@ const RoleModel_1 = require("./RoleModel");
  * @date 2025-03-21
  * @version 1.0.0
  */
-let UserRoleModel = class UserRoleModel {
-};
+// @Entity('user_roles')
+class UserRoleModel {
+}
 exports.UserRoleModel = UserRoleModel;
 __decorate([
     (0, typeorm_1.PrimaryColumn)({ type: 'char', length: 36, name: 'user_id', comment: 'ユーザーID（外部キー）' }),
@@ -44,6 +45,3 @@ __decorate([
     (0, typeorm_1.JoinColumn)({ name: 'role_id' }),
     __metadata("design:type", RoleModel_1.RoleModel)
 ], UserRoleModel.prototype, "role", void 0);
-exports.UserRoleModel = UserRoleModel = __decorate([
-    (0, typeorm_1.Entity)('user_roles')
-], UserRoleModel);

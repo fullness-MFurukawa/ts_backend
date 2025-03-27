@@ -8,7 +8,7 @@ import { RoleModel } from "./RoleModel";
  * @date 2025-03-21
  * @version 1.0.0
  */
-@Entity('user_roles')
+// @Entity('user_roles')
 export class UserRoleModel {
     // --- 複合主キー構成 ---
     @PrimaryColumn({ type: 'char', length: 36, name: 'user_id', comment: 'ユーザーID（外部キー）' })

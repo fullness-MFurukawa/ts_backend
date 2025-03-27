@@ -116,23 +116,23 @@ describe("RoleRepositoryImplの単体テスト", () => {
     });
     describe("findAllInheritedRoles()メソッド", () => {
         it("Adminロールを指定した場合、Admin, User, Guestが含まれる", async () => {
-            const roleName = RoleName_1.RoleName.fromString("admin");
+            const roleName = RoleName_1.RoleName.fromString("Admin");
             const roles = await repository.findAllInheritedRoles(roleName);
             const roleNames = roles.map(r => r.getName().getValue()).sort();
             console.log(roleNames);
-            expect(roleNames).toEqual(["admin", "guest", "user"]);
+            expect(roleNames).toEqual(["Admin", "Guest", "User"]);
         });
         it("Userロールを指定した場合、User, Guestが含まれる", async () => {
-            const roleName = RoleName_1.RoleName.fromString("user");
+            const roleName = RoleName_1.RoleName.fromString("User");
             const roles = await repository.findAllInheritedRoles(roleName);
             const roleNames = roles.map(r => r.getName().getValue()).sort();
-            expect(roleNames).toEqual(["guest", "user"]);
+            expect(roleNames).toEqual(["Guest", "User"]);
         });
         it("Guestロールを指定した場合、Guestのみ含まれる", async () => {
-            const roleName = RoleName_1.RoleName.fromString("guest");
+            const roleName = RoleName_1.RoleName.fromString("Guest");
             const roles = await repository.findAllInheritedRoles(roleName);
             const roleNames = roles.map(r => r.getName().getValue()).sort();
-            expect(roleNames).toEqual(["guest"]);
+            expect(roleNames).toEqual(["Guest"]);
         });
         it("存在しないロールを指定した場合、空配列が返される", async () => {
             const roleName = RoleName_1.RoleName.fromString("nonexistent");

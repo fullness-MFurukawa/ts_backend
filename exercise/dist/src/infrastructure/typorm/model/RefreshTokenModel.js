@@ -19,8 +19,9 @@ const UserModel_1 = require("./UserModel");
  * @date 2025-03-21
  * @version 1.0.0
  */
-let RefreshTokenModel = class RefreshTokenModel {
-};
+//@Entity('refresh_tokens')
+class RefreshTokenModel {
+}
 exports.RefreshTokenModel = RefreshTokenModel;
 __decorate([
     (0, typeorm_1.PrimaryColumn)({ type: 'char', length: 36, comment: '主キー: リフレッシュトークンのUUID' }),
@@ -59,6 +60,3 @@ __decorate([
     (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
     __metadata("design:type", UserModel_1.UserModel)
 ], RefreshTokenModel.prototype, "user", void 0);
-exports.RefreshTokenModel = RefreshTokenModel = __decorate([
-    (0, typeorm_1.Entity)('refresh_tokens')
-], RefreshTokenModel);
