@@ -1,1 +1,1 @@
-/app/exercise/dist/main.js
+/app/exercise/dist/src/main.js

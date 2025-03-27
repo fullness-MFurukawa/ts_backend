@@ -53,8 +53,8 @@ import { UserRepositoryImpl } from "./typorm/repository/UserRepositoryImpl";
                 entities: [
                     ProductModel, 
                     CategoryModel,
-                    RoleModel,
-                    UserModel,
+                    //RoleModel,
+                    //UserModel,
                     // UserRoleModel,
                     // RefreshTokenModel
                 ],
@@ -66,8 +66,8 @@ import { UserRepositoryImpl } from "./typorm/repository/UserRepositoryImpl";
         TypeOrmModule.forFeature([
             ProductModel, 
             CategoryModel,
-            RoleModel,
-            UserModel,
+            //RoleModel,
+            //UserModel,
             // UserRoleModel,
             // RefreshTokenModel
         ]),

@@ -8,7 +8,7 @@ import { RefreshTokenModel } from "./RefreshTokenModel";
  * @date 2025-03-21
  * @version 1.0.0
  */
-@Entity('users')
+//@Entity('users')
 export class UserModel {
     // UUID形式のユーザーId（主キー）
     @PrimaryColumn({ type: 'char', length: 36, comment: 'ユーザーID（UUID形式）' })

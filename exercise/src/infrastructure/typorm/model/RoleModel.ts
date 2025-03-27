@@ -7,7 +7,7 @@ import { UserRoleModel } from "./UserRoleModel";
  * @date 2025-03-21
  * @version 1.0.0
  */
-@Entity('roles')
+//@Entity('roles')
 export class RoleModel {
     /**
      * コンストラクタ

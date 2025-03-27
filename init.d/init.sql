@@ -33,7 +33,7 @@ CREATE TABLE users (
 -- ロール情報を格納するテーブル
 CREATE TABLE roles (
     id CHAR(36) NOT NULL PRIMARY KEY COMMENT 'ロールID（UUID形式）',
-    name VARCHAR(100) NOT NULL UNIQUE COMMENT 'ロール名（Admin, User, Guestなど）',
+    name VARCHAR(30) NOT NULL UNIQUE COMMENT 'ロール名（Admin, User, Guestなど）',
     description VARCHAR(255) COMMENT 'ロールの説明',
     inherits_from CHAR(36) NULL COMMENT '継承元のロールID',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'レコード作成日時',
@@ -56,7 +56,6 @@ CREATE TABLE user_roles (
 -- UUIDを使ったリフレッシュトークンテーブル
 CREATE TABLE refresh_tokens (
   id CHAR(36) PRIMARY KEY COMMENT '主キー: リフレッシュトークンのUUID',
-
   user_id CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '対象のユーザーID(UUID)',
   token VARCHAR(512) NOT NULL UNIQUE COMMENT 'リフレッシュトークンの文字列（JWTなど）',
 
@@ -69,46 +68,6 @@ CREATE TABLE refresh_tokens (
 
   CONSTRAINT fk_refresh_token_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='ユーザーごとのリフレッシュトークンを管理するテーブル（UUID）';
-
-
-
-
-
-
-/* ユーザーテーブル作成 */
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,  /*ユーザーId(主キー、自動インクリメント)*/
-    username VARCHAR(255) UNIQUE NOT NULL, /* ユーザー名(ユニーク)*/
-    password VARCHAR(255) NOT NULL, /* ハッシュ化されたパスワード */
-    email VARCHAR(255) UNIQUE, /* メールアドレス(ユニーク)*/
-    is_active BOOLEAN DEFAULT true, /* アカウントの有効・無効フラグ */
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, /* レコード作成日時 */
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP /* レコード更新日時 */
-);
-/* ロールテーブル作成 */
-CREATE TABLE roles (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) UNIQUE NOT NULL,
-    inherits_from INT REFERENCES roles(id) ON DELETE SET NULL
-);
-
-/* ユーザーロールテーブル作成 */
-CREATE TABLE user_roles (
-    user_id INT REFERENCES users(id) ON DELETE CASCADE, /* ユーザーId(外部キー) */
-    role_id INT REFERENCES roles(id) ON DELETE CASCADE, /* ロールId(外部キー) */
-    PRIMARY KEY (user_id, role_id)
-);
-
-/* リフレッシュトークン管理テーブル作成 */
-CREATE TABLE refresh_tokens (
-    id SERIAL PRIMARY KEY, /* トークンId(主キー、自動インクリメント) */
-    user_id INT REFERENCES users(id) ON DELETE CASCADE, /* ユーザーId(外部キー) */
-    token TEXT NOT NULL, /* リフレッシュトークン(JWT) */
-    expires_at TIMESTAMP NOT NULL, /* トークン有効期限 */
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP /* レコード作成日時 */
-);
-
-
 
 /*
     商品カテゴリ
@@ -165,6 +124,7 @@ VALUES ('3d1de6e4-06dc-11f0-9fce-6a0ec65304f1', 'Admin', '管理者権限を持�
 
 /* ユーザーの作成（パスワードは事前にハッシュ化） */
 /* パスワード:P@ssw0rd123 */
+/*
 INSERT INTO users (id, username, email, password, is_active, created_at, updated_at)
 VALUES
   (
@@ -176,10 +136,13 @@ VALUES
     CURRENT_TIMESTAMP,
     CURRENT_TIMESTAMP
   ); 
+*/
 /* ユーザーロールの関連付け */
 -- Userはadmin権限を持つ
+/*
 INSERT INTO user_roles (user_id, role_id)
 VALUES (
   '3d1e89a4-06dc-11f0-9fce-6a0ec65304f1',  -- testuser の user_id
   '3d1de6e4-06dc-11f0-9fce-6a0ec65304f1'   -- admin の role_id
 ); 
+*/

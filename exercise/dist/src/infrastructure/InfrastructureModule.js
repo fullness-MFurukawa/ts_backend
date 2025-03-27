@@ -20,8 +20,6 @@ const ProductRepositoryImpl_1 = require("./typorm/repository/ProductRepositoryIm
 const config_1 = require("@nestjs/config");
 const RoleModelConverter_1 = require("./typorm/adapter/RoleModelConverter");
 const RoleModelRestorer_1 = require("./typorm/adapter/RoleModelRestorer");
-const RoleModel_1 = require("./typorm/model/RoleModel");
-const UserModel_1 = require("./typorm/model/UserModel");
 const UserModelConverter_1 = require("./typorm/adapter/UserModelConverter");
 const UserModelRestorer_1 = require("./typorm/adapter/UserModelRestorer");
 const RoleRepositoryImpl_1 = require("./typorm/repository/RoleRepositoryImpl");
@@ -61,8 +59,8 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
                     entities: [
                         ProductModel_1.ProductModel,
                         CategoryModel_1.CategoryModel,
-                        RoleModel_1.RoleModel,
-                        UserModel_1.UserModel,
+                        //RoleModel,
+                        //UserModel,
                         // UserRoleModel,
                         // RefreshTokenModel
                     ],
@@ -74,8 +72,8 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
             typeorm_1.TypeOrmModule.forFeature([
                 ProductModel_1.ProductModel,
                 CategoryModel_1.CategoryModel,
-                RoleModel_1.RoleModel,
-                UserModel_1.UserModel,
+                //RoleModel,
+                //UserModel,
                 // UserRoleModel,
                 // RefreshTokenModel
             ]),
