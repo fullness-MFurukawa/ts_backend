@@ -13,6 +13,7 @@ import { RegisterUserInteractor } from "./in/service/RegisterUserInteractor";
 import { AuthenticateUserInteractor } from "./in/service/AuthenticateUserInteractor";
 import { JwtModule } from "@nestjs/jwt";
 import { JwtStrategy } from "@src/interface/rest/controller/auth/jwt.strategy";
+import { LogoutUserInteractor } from "./in/service/LogoutUserInteractor";
 /**
  * サービス層のモジュール定義
  * - 商品カテゴリサービス、商品サービスを登録
@@ -86,6 +87,11 @@ import { JwtStrategy } from "@src/interface/rest/controller/auth/jwt.strategy";
             provide:    'AuthenticateUserUsecase' ,
             useClass:   AuthenticateUserInteractor,
         },
+        // ログアウトユースケースインターフェイスの実装
+        {
+            provide:    'LogoutUserUsecase'     ,
+            useClass:   LogoutUserInteractor    ,
+        },
         JwtStrategy, //
     ],
     exports: [
@@ -99,7 +105,8 @@ import { JwtStrategy } from "@src/interface/rest/controller/auth/jwt.strategy";
         'UserDTOConverter'          ,
         'UserDTORestorer'           , 
         'RegisterUserUsecase'       ,
-        'AuthenticateUserUsecase'   ,    
+        'AuthenticateUserUsecase'   ,
+        'LogoutUserUsecase'         ,    
     ]
 })
 export class ApplicationModule {}

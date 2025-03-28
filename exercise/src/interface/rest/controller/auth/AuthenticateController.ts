@@ -5,6 +5,8 @@ import { Converter } from "@src/shared/adapter/Converter";
 import { AuthenticateParam } from "../../param/AuthenticateParam";
 import { AuthenticateDTO } from "@src/application/in/dto/AuthenticateDTO";
 import { AuthenticateResultDTO } from "@src/application/in/dto/AuthenticateResultDTO";
+import { LogoutUserUsecase } from "@src/application/in/usecase/LogoutUserUsecase";
+import { LogoutParam } from "../../param/LogoutParam";
 
 /**
  * 認証APIコントローラ
@@ -19,11 +21,14 @@ export class AuthenticateController {
     /**
      * コンストラクタ
      * @param authenticateUserUsecase 認証ユースケース
+     * @param logoutUserUsecase ログアウトユースケース
      * @param paramConverter AuthenticateParamをAuthenticateDTOに変換 
      */
     constructor(
         @Inject('AuthenticateUserUsecase')
         private readonly authenticateUserUsecase: AuthenticateUserUsecase,
+        @Inject('LogoutUserUsecase')
+        private readonly logoutUserUsecase: LogoutUserUsecase, 
         @Inject('AuthenticateParamConverter')
         private readonly paramConverter: Converter<AuthenticateParam, AuthenticateDTO>,
     ) {}
@@ -51,5 +56,17 @@ export class AuthenticateController {
     async login(@Body() param: AuthenticateParam): Promise<AuthenticateResultDTO> {
         const dto = await this.paramConverter.convert(param);
         return await this.authenticateUserUsecase.authenticate(dto);
-     }
+    }
+
+    @Post('logout')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @UsePipes(new ValidationPipe({ transform: true }))
+    @ApiOperation({ summary: 'ユーザーログアウト（リフレッシュトークン無効化）' })
+    @ApiBody({ type: LogoutParam })
+    @ApiResponse({ status: 204, description: 'ログアウト成功。リフレッシュトークンを無効化しました。' })
+    @ApiResponse({ status: 404, description: 'リフレッシュトークンが存在しない場合のエラー。' })
+    @ApiResponse({ status: 500, description: 'サーバー内部エラー。' })
+    async logout(@Body() param: LogoutParam): Promise<void> {
+        await this.logoutUserUsecase.logout(param.refresh_token);
+    }
 }

@@ -22,6 +22,7 @@ const RegisterUserInteractor_1 = require("./in/service/RegisterUserInteractor");
 const AuthenticateUserInteractor_1 = require("./in/service/AuthenticateUserInteractor");
 const jwt_1 = require("@nestjs/jwt");
 const jwt_strategy_1 = require("../interface/rest/controller/auth/jwt.strategy");
+const LogoutUserInteractor_1 = require("./in/service/LogoutUserInteractor");
 /**
  * サービス層のモジュール定義
  * - 商品カテゴリサービス、商品サービスを登録
@@ -99,6 +100,11 @@ exports.ApplicationModule = ApplicationModule = __decorate([
                 provide: 'AuthenticateUserUsecase',
                 useClass: AuthenticateUserInteractor_1.AuthenticateUserInteractor,
             },
+            // ログアウトユースケースインターフェイスの実装
+            {
+                provide: 'LogoutUserUsecase',
+                useClass: LogoutUserInteractor_1.LogoutUserInteractor,
+            },
             jwt_strategy_1.JwtStrategy, //
         ],
         exports: [
@@ -113,6 +119,7 @@ exports.ApplicationModule = ApplicationModule = __decorate([
             'UserDTORestorer',
             'RegisterUserUsecase',
             'AuthenticateUserUsecase',
+            'LogoutUserUsecase',
         ]
     })
 ], ApplicationModule);

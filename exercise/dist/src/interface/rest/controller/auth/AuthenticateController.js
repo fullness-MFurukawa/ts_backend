@@ -16,6 +16,7 @@ exports.AuthenticateController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const AuthenticateParam_1 = require("../../param/AuthenticateParam");
+const LogoutParam_1 = require("../../param/LogoutParam");
 /**
  * 認証APIコントローラ
  * - ユーザーのログイン処理を提供する
@@ -27,10 +28,12 @@ let AuthenticateController = class AuthenticateController {
     /**
      * コンストラクタ
      * @param authenticateUserUsecase 認証ユースケース
+     * @param logoutUserUsecase ログアウトユースケース
      * @param paramConverter AuthenticateParamをAuthenticateDTOに変換
      */
-    constructor(authenticateUserUsecase, paramConverter) {
+    constructor(authenticateUserUsecase, logoutUserUsecase, paramConverter) {
         this.authenticateUserUsecase = authenticateUserUsecase;
+        this.logoutUserUsecase = logoutUserUsecase;
         this.paramConverter = paramConverter;
     }
     /**
@@ -41,6 +44,9 @@ let AuthenticateController = class AuthenticateController {
     async login(param) {
         const dto = await this.paramConverter.convert(param);
         return await this.authenticateUserUsecase.authenticate(dto);
+    }
+    async logout(param) {
+        await this.logoutUserUsecase.logout(param.refresh_token);
     }
 };
 exports.AuthenticateController = AuthenticateController;
@@ -65,10 +71,25 @@ __decorate([
     __metadata("design:paramtypes", [AuthenticateParam_1.AuthenticateParam]),
     __metadata("design:returntype", Promise)
 ], AuthenticateController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)('logout'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ transform: true })),
+    (0, swagger_1.ApiOperation)({ summary: 'ユーザーログアウト（リフレッシュトークン無効化）' }),
+    (0, swagger_1.ApiBody)({ type: LogoutParam_1.LogoutParam }),
+    (0, swagger_1.ApiResponse)({ status: 204, description: 'ログアウト成功。リフレッシュトークンを無効化しました。' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'リフレッシュトークンが存在しない場合のエラー。' }),
+    (0, swagger_1.ApiResponse)({ status: 500, description: 'サーバー内部エラー。' }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [LogoutParam_1.LogoutParam]),
+    __metadata("design:returntype", Promise)
+], AuthenticateController.prototype, "logout", null);
 exports.AuthenticateController = AuthenticateController = __decorate([
     (0, swagger_1.ApiTags)('認証'),
     (0, common_1.Controller)('auth'),
     __param(0, (0, common_1.Inject)('AuthenticateUserUsecase')),
-    __param(1, (0, common_1.Inject)('AuthenticateParamConverter')),
-    __metadata("design:paramtypes", [Object, Object])
+    __param(1, (0, common_1.Inject)('LogoutUserUsecase')),
+    __param(2, (0, common_1.Inject)('AuthenticateParamConverter')),
+    __metadata("design:paramtypes", [Object, Object, Object])
 ], AuthenticateController);
