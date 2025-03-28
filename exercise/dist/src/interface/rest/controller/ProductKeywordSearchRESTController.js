@@ -19,6 +19,8 @@ const KeywordSearchParam_1 = require("../param/KeywordSearchParam");
 const ProductDTO_1 = require("../../../application/in/dto/ProductDTO");
 const swagger_1 = require("@nestjs/swagger");
 const passport_1 = require("@nestjs/passport");
+const RolesGuard_1 = require("./auth/RolesGuard");
+const roles_decorator_1 = require("./auth/roles.decorator");
 /**
  * 商品キーワード検索RESTAPIコントローラ
  * @author Fullness,Inc.
@@ -50,7 +52,9 @@ __decorate([
     (0, swagger_1.ApiQuery)({ name: "keyword", required: true, description: "検索する商品キーワード" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "成功", type: [ProductDTO_1.ProductDTO] }),
     (0, swagger_1.ApiResponse)({ status: 404, description: "商品が見つからない" }),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')) // ← JWT認証が必要に！
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard) // 2025-03-28 RolesGuardを追加
+    ,
+    (0, roles_decorator_1.Roles)('Guest') // Guestロールを持っていればアクセス可能
     ,
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)(new common_1.ValidationPipe({ transform: true }))),

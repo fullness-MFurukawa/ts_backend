@@ -9,6 +9,7 @@ import { RegisterUserController } from "./rest/controller/auth/RegisterUserContr
 import { RegisterUserParamConverter } from "./rest/adapter/RegisterUserParamToConverter";
 import { AuthenticateParamConverter } from "./rest/adapter/AuthenticateParamConverter";
 import { AuthenticateController } from "./rest/controller/auth/AuthenticateController";
+import { RolesGuard } from "./rest/controller/auth/RolesGuard";
 
 /**
  * インターフェイス層のモジュール定義
@@ -55,6 +56,7 @@ import { AuthenticateController } from "./rest/controller/auth/AuthenticateContr
             provide:    'AuthenticateParamConverter' ,
             useClass:   AuthenticateParamConverter  ,
         },
+        RolesGuard, // Roleを利用したGuardを追加 2025-03-28
     ],
     exports:[
         'RegisterProductParamConverter' , // 商品登録パラメータ変換クラス

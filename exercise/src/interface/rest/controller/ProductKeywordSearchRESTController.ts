@@ -4,6 +4,8 @@ import { ProductDTO } from "@src/application/in/dto/ProductDTO";
 import { ProductUsecase } from "@src/application/in/usecase/ProductUsecase";
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
+import { RolesGuard } from "./auth/RolesGuard";
+import { Roles } from "./auth/roles.decorator";
 
 /**
  * 商品キーワード検索RESTAPIコントローラ
@@ -32,7 +34,8 @@ export class ProductKeywordSearchRESTController {
     @ApiQuery({ name: "keyword", required: true, description: "検索する商品キーワード" })
     @ApiResponse({ status: 200, description: "成功", type: [ProductDTO] })
     @ApiResponse({ status: 404, description: "商品が見つからない" })
-    @UseGuards(AuthGuard('jwt')) // ← JWT認証が必要に！
+    @UseGuards(AuthGuard('jwt'),RolesGuard) // 2025-03-28 RolesGuardを追加
+    @Roles('Guest') // Guestロールを持っていればアクセス可能
     @Get()
     async searchByKeyword(
     @Query(new ValidationPipe({ transform: true })) param: KeywordSearchParam): Promise<ProductDTO[]> {

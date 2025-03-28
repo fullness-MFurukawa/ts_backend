@@ -23,11 +23,14 @@ const RoleModelRestorer_1 = require("./typorm/adapter/RoleModelRestorer");
 const RoleModel_1 = require("./typorm/model/RoleModel");
 const UserModel_1 = require("./typorm/model/UserModel");
 const UserRoleModel_1 = require("./typorm/model/UserRoleModel");
-const RefreshTokenModel_1 = require("./typorm/model/RefreshTokenModel");
 const UserModelConverter_1 = require("./typorm/adapter/UserModelConverter");
 const UserModelRestorer_1 = require("./typorm/adapter/UserModelRestorer");
 const RoleRepositoryImpl_1 = require("./typorm/repository/RoleRepositoryImpl");
 const UserRepositoryImpl_1 = require("./typorm/repository/UserRepositoryImpl");
+const RefreshTokenModelConverter_1 = require("./typorm/adapter/RefreshTokenModelConverter");
+const RefreshTokenModel_1 = require("./typorm/model/RefreshTokenModel");
+const RefreshTokenModelRestorer_1 = require("./typorm/adapter/RefreshTokenModelRestorer");
+const RefreshTokenRepositoryImpl_1 = require("./typorm/repository/RefreshTokenRepositoryImpl");
 /**
  * インフラストラクチャ層のモジュール定義
  * - データベース接続情報
@@ -146,6 +149,21 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
                 provide: 'UserRepository',
                 useClass: UserRepositoryImpl_1.UserRepositoryImpl,
             },
+            // RefreshTokenをRefreshTokenModelに変換
+            {
+                provide: 'RefreshTokenModelConverter',
+                useClass: RefreshTokenModelConverter_1.RefreshTokenModelConverter,
+            },
+            // RefreshTokenModelからRefreshTokenエンティティを復元する
+            {
+                provide: 'RefreshTokenModelRestorer',
+                useClass: RefreshTokenModelRestorer_1.RefreshTokenModelRestorer,
+            },
+            // リフレッシュトークンリポジトリ
+            {
+                provide: 'RefreshTokenRepository',
+                useClass: RefreshTokenRepositoryImpl_1.RefreshTokenRepositoryImpl,
+            },
         ],
         exports: [
             'CategoryModelConverter',
@@ -160,6 +178,9 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
             'UserModelRestorer',
             'RoleRepository',
             'UserRepository',
+            'RefreshTokenModelConverter',
+            'RefreshTokenModelRestorer',
+            'RefreshTokenRepository',
         ],
     })
 ], InfrastructureModule);

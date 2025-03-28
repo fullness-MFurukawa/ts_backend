@@ -1,6 +1,7 @@
 import {    ArgumentsHost, 
             Catch, 
             ExceptionFilter, 
+            ForbiddenException, 
             HttpException, 
             HttpStatus, 
             Logger, 
@@ -29,7 +30,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
         [ExistsException, HttpStatus.BAD_REQUEST], // ExistsException
         [NotFoundException, HttpStatus.NOT_FOUND], // NotFoundException
         [InternalException, HttpStatus.INTERNAL_SERVER_ERROR],// InternalException
-        [UnauthorizedException, HttpStatus.UNAUTHORIZED],// 認証失敗
+        [UnauthorizedException, HttpStatus.UNAUTHORIZED],   // 認証失敗
+        [ForbiddenException, HttpStatus.FORBIDDEN],         // 権限不足
     ]);
 
     catch(exception: any, host: ArgumentsHost) {

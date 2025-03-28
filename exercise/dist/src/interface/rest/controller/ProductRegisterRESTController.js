@@ -19,6 +19,9 @@ const CategoryDTO_1 = require("../../../application/in/dto/CategoryDTO");
 const CategoryIdSearchParam_1 = require("../param/CategoryIdSearchParam");
 const RegisterProductParam_1 = require("../param/RegisterProductParam");
 const swagger_1 = require("@nestjs/swagger");
+const passport_1 = require("@nestjs/passport");
+const RolesGuard_1 = require("./auth/RolesGuard");
+const roles_decorator_1 = require("./auth/roles.decorator");
 /**
  * 新商品登録RESTAPIコントローラ
  * @author Fullness,Inc.
@@ -77,6 +80,10 @@ exports.ProductRegisterRESTController = ProductRegisterRESTController;
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "全ての商品カテゴリを取得", description: "登録可能な商品カテゴリ一覧を取得" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "成功", type: [CategoryDTO_1.CategoryDTO] }),
+    (0, swagger_1.ApiForbiddenResponse)({ description: "権限がありません（Userロールが必要です）" }),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard) // ← JWT認証が必要に！
+    ,
+    (0, roles_decorator_1.Roles)('User'),
     (0, common_1.Get)('categories'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -87,6 +94,10 @@ __decorate([
     (0, swagger_1.ApiParam)({ name: "categoryId", required: true, description: "取得する商品カテゴリのId", example: "12345" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "成功", type: CategoryDTO_1.CategoryDTO }),
     (0, swagger_1.ApiResponse)({ status: 404, description: "カテゴリが見つからない" }),
+    (0, swagger_1.ApiForbiddenResponse)({ description: "権限がありません（Userロールが必要です）" }),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard) // ← JWT認証が必要に！
+    ,
+    (0, roles_decorator_1.Roles)('User'),
     (0, common_1.Get)(':categoryId'),
     __param(0, (0, common_1.Param)()),
     __metadata("design:type", Function),
@@ -111,6 +122,10 @@ __decorate([
     }),
     (0, swagger_1.ApiResponse)({ status: 201, description: "登録成功" }),
     (0, swagger_1.ApiResponse)({ status: 400, description: "バリデーションエラー" }),
+    (0, swagger_1.ApiForbiddenResponse)({ description: "権限がありません（Userロールが必要です）" }),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard) // ← JWT認証が必要に！
+    ,
+    (0, roles_decorator_1.Roles)('User'),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)(new common_1.ValidationPipe({ transform: true }))),
     __metadata("design:type", Function),
@@ -119,6 +134,8 @@ __decorate([
 ], ProductRegisterRESTController.prototype, "registerProduct", null);
 exports.ProductRegisterRESTController = ProductRegisterRESTController = ProductRegisterRESTController_1 = __decorate([
     (0, swagger_1.ApiTags)("商品登録") // Swagger のカテゴリ設定
+    ,
+    (0, swagger_1.ApiBearerAuth)('access-token') // Swaggerの「Authorize」ボタンを有効にするため
     ,
     (0, common_1.Controller)('products/register'),
     __param(0, (0, common_1.Inject)('ProductUsecase')),

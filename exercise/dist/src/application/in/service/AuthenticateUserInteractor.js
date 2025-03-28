@@ -20,6 +20,11 @@ const Username_1 = require("../../domain/model/user/Username");
 const Password_1 = require("../../domain/model/user/Password");
 const config_1 = require("@nestjs/config");
 const typeorm_2 = require("@nestjs/typeorm");
+const RefreshTokenId_1 = require("../../domain/model/token/RefreshTokenId");
+const RefreshToken_1 = require("../../domain/model/token/RefreshToken");
+const InternalException_1 = require("../../../shared/exceptions/InternalException");
+const date_fns_1 = require("date-fns");
+const AuthenticateResultDTO_1 = require("../dto/AuthenticateResultDTO");
 /**
  * ユーザー認証ユースケースの実装クラス
  * - ユーザー名とパスワードを検証し、JWTを発行する
@@ -31,14 +36,17 @@ let AuthenticateUserInteractor = class AuthenticateUserInteractor {
     /**
      * コンストラクタ
      * @param userRepository ユーザーリポジトリ
+     * @param refreshTokenRepository リフレッシュトークントークンリポジトリ
      * @param jwtService JWTトークン生成サービス
      * @param configService .envサービス
      */
-    constructor(manager, userRepository, jwtService, configService) {
-        this.manager = manager;
+    constructor(entityManager, userRepository, refreshTokenRepository, jwtService, configService) {
+        this.entityManager = entityManager;
         this.userRepository = userRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
         this.jwtService = jwtService;
         this.configService = configService;
+        this.logger = new common_1.Logger('AuthenticateUserInteractor');
     }
     /**
      * 認証処理の実行
@@ -51,7 +59,7 @@ let AuthenticateUserInteractor = class AuthenticateUserInteractor {
         const username = Username_1.Username.fromString(dto.username);
         const password = Password_1.Password.fromPlain(dto.password);
         // ユーザ名で対象ユーザーを取得する
-        const user = await this.userRepository.findByUsername(username, this.manager);
+        const user = await this.userRepository.findByUsername(username, this.entityManager);
         if (!user) {
             throw new common_1.UnauthorizedException('認証に失敗しました（ユーザーが存在しません）。');
         }
@@ -60,6 +68,8 @@ let AuthenticateUserInteractor = class AuthenticateUserInteractor {
         if (!isMatch) {
             throw new common_1.UnauthorizedException('認証に失敗しました（パスワード不一致）。');
         }
+        // リフレッシュトークンを生成して保存する
+        const refreshTokenValue = await this.generateAndSaveRefreshToken(username);
         // JWTペイロードと署名を生成する
         const payload = {
             sub: user.getId().getValue(),
@@ -75,7 +85,36 @@ let AuthenticateUserInteractor = class AuthenticateUserInteractor {
             secret,
             expiresIn,
         });
-        return token;
+        return new AuthenticateResultDTO_1.AuthenticateResultDTO(token, refreshTokenValue);
+    }
+    /**
+     * リフレッシュトークンを生成して保存する
+     * @param username ユーザー名
+     */
+    async generateAndSaveRefreshToken(username) {
+        // リフレッシュトークンの値を設定
+        const refreshTokenId = RefreshTokenId_1.RefreshTokenId.new();
+        const refreshTokenValue = refreshTokenId.getValue(); // UUIDとしてそのまま利用
+        const issuedAt = new Date();
+        const expiresAt = (0, date_fns_1.addMinutes)(issuedAt, parseInt(this.configService.get('REFRESH_TOKEN_EXPIRES_MINUTES', '1440')));
+        await this.entityManager.transaction(async (manager) => {
+            try {
+                // ユーザー情報の取得
+                const user = await this.userRepository.findByUsername(username, manager);
+                if (!user) {
+                    throw new InternalException_1.InternalException(`ユーザー情報の再取得に失敗しました。`);
+                }
+                // リフレッシュトークンの生成
+                const refreshToken = new RefreshToken_1.RefreshToken(refreshTokenId, user.getId(), refreshTokenValue, issuedAt, expiresAt);
+                // DBへリフレッシュトークンを保存
+                await this.refreshTokenRepository.create(refreshToken, manager);
+            }
+            catch (error) {
+                this.logger.error(`リフレッシュトークン登録失敗: ${error}`, error.stack);
+                throw new InternalException_1.InternalException(`リフレッシュトークンの登録処理中に予期せぬエラーが発生しました。`);
+            }
+        });
+        return refreshTokenValue;
     }
 };
 exports.AuthenticateUserInteractor = AuthenticateUserInteractor;
@@ -83,6 +122,7 @@ exports.AuthenticateUserInteractor = AuthenticateUserInteractor = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_2.InjectEntityManager)()),
     __param(1, (0, common_1.Inject)('UserRepository')),
-    __metadata("design:paramtypes", [typeorm_1.EntityManager, Object, jwt_1.JwtService,
+    __param(2, (0, common_1.Inject)('RefreshTokenRepository')),
+    __metadata("design:paramtypes", [typeorm_1.EntityManager, Object, Object, jwt_1.JwtService,
         config_1.ConfigService])
 ], AuthenticateUserInteractor);

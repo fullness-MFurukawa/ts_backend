@@ -1,10 +1,14 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Inject, Logger, Param, Put } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Inject, Logger, Param, Put, UseGuards } from "@nestjs/common";
 import { ProductDTO } from "@src/application/in/dto/ProductDTO";
 import { ProductUsecase } from "@src/application/in/usecase/ProductUsecase";
 import { ProductIdSearchParam } from "../param/ProductIdSearchParam";
 import { Converter } from "@src/shared/adapter/Converter";
 import { ModifyProductParam } from "../param/ModifyProductParam";
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { AuthGuard } from "@nestjs/passport";
+import { RolesGuard } from "./auth/RolesGuard";
+import { Role } from "@src/application/domain/model/role/Role";
+import { Roles } from "./auth/roles.decorator";
 
 /**
  * 既存商品の変更RESTAPIコントローラ
@@ -13,6 +17,7 @@ import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/s
  * @version 1.0.0
  */
 @ApiTags("商品変更(商品名、単価)") // Swaggerのカテゴリ設定
+@ApiBearerAuth('access-token') // Swaggerの「Authorize」ボタンを有効にするため
 @Controller('products/modify')
 export class ProductModifyRESTController {
     private readonly logger = new Logger(ProductModifyRESTController.name);
@@ -37,6 +42,9 @@ export class ProductModifyRESTController {
     @ApiParam({ name: "productId", description: "取得する商品のId", example: "550e8400-e29b-41d4-a716-446655440000" })
     @ApiResponse({ status: 200, description: "成功", type: ProductDTO })
     @ApiResponse({ status: 404, description: "商品が見つからない" })
+    @ApiForbiddenResponse({ description: "権限がありません（Userロールが必要です）" })
+    @UseGuards(AuthGuard('jwt'),RolesGuard) // ← JWT認証が必要に！
+    @Roles('User')
     @Get(':productId')
     async getProduct(@Param() param: ProductIdSearchParam): Promise<ProductDTO> {
         this.logger.log(`受信した商品Id: ${param.productId} 開始`);
@@ -66,6 +74,9 @@ export class ProductModifyRESTController {
     })
     @ApiResponse({ status: 200, description: "変更成功" })
     @ApiResponse({ status: 400, description: "バリデーションエラー" })
+    @ApiForbiddenResponse({ description: "権限がありません（Userロールが必要です）" })
+    @UseGuards(AuthGuard('jwt'),RolesGuard) // ← JWT認証が必要に！
+    @Roles('User')
     @Put()
     @HttpCode(HttpStatus.OK) // ステータスコードを200に設定
     async modifyProduct(

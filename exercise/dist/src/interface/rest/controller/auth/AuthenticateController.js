@@ -40,8 +40,7 @@ let AuthenticateController = class AuthenticateController {
      */
     async login(param) {
         const dto = await this.paramConverter.convert(param);
-        const token = await this.authenticateUserUsecase.authenticate(dto);
-        return { access_token: token };
+        return await this.authenticateUserUsecase.authenticate(dto);
     }
 };
 exports.AuthenticateController = AuthenticateController;
@@ -51,11 +50,16 @@ __decorate([
     (0, common_1.UsePipes)(new common_1.ValidationPipe({ transform: true })),
     (0, swagger_1.ApiOperation)({ summary: 'ユーザーログイン（JWTトークンを取得）' }),
     (0, swagger_1.ApiBody)({ type: AuthenticateParam_1.AuthenticateParam }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: '認証成功。JWTトークンを返却します。', schema: {
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: '認証成功。アクセストークンとリフレッシュトークンを返却します。',
+        schema: {
             example: {
-                access_token: 'eyJhbGciOiJIUzI1NiIsInR...'
+                access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                refresh_token: '93d3f768-1d1e-4760-94a6-abc123456789'
             }
-        } }),
+        }
+    }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [AuthenticateParam_1.AuthenticateParam]),

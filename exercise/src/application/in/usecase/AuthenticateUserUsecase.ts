@@ -1,4 +1,5 @@
 import { AuthenticateDTO } from "../dto/AuthenticateDTO";
+import { AuthenticateResultDTO } from "../dto/AuthenticateResultDTO";
 
 /**
  * ユーザー認証ユースケースのインターフェース
@@ -14,5 +15,5 @@ export interface AuthenticateUserUsecase {
      * @returns 認証成功時にJWTトークンを返す
      * @throws UnauthorizedException認証に失敗した場合
      */
-    authenticate(dto: AuthenticateDTO): Promise<string>;
+    authenticate(dto: AuthenticateDTO): Promise<AuthenticateResultDTO>;
 }

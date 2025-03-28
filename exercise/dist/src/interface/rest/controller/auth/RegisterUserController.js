@@ -17,6 +17,9 @@ const common_1 = require("@nestjs/common");
 const RoleDTO_1 = require("../../../../application/in/dto/RoleDTO");
 const RegisterUserParam_1 = require("../../param/RegisterUserParam");
 const swagger_1 = require("@nestjs/swagger");
+const passport_1 = require("@nestjs/passport");
+const RolesGuard_1 = require("./RolesGuard");
+const roles_decorator_1 = require("./roles.decorator");
 /**
  * ユーザー登録RESTAPIコントローラ
  * @author Fullness,Inc.
@@ -54,6 +57,9 @@ __decorate([
     (0, common_1.Get)('roles'),
     (0, swagger_1.ApiOperation)({ summary: '利用可能なロール一覧の取得' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'ロール一覧を取得しました。', type: [RoleDTO_1.RoleDTO] }),
+    (0, swagger_1.ApiForbiddenResponse)({ description: '権限がありません（Adminロールが必要です）' }),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('Admin'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
@@ -66,6 +72,9 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'ユーザー登録' }),
     (0, swagger_1.ApiBody)({ type: RegisterUserParam_1.RegisterUserParam }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'ユーザーが正常に登録されました。' }),
+    (0, swagger_1.ApiForbiddenResponse)({ description: '権限がありません（Adminロールが必要です）' }),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('Admin'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [RegisterUserParam_1.RegisterUserParam]),
@@ -73,6 +82,8 @@ __decorate([
 ], RegisterUserController.prototype, "registerUser", null);
 exports.RegisterUserController = RegisterUserController = __decorate([
     (0, swagger_1.ApiTags)('ユーザー登録'),
+    (0, swagger_1.ApiBearerAuth)('access-token') // Swaggerの「Authorize」ボタンを有効にするため
+    ,
     (0, common_1.Controller)('users/register'),
     __param(0, (0, common_1.Inject)('RegisterUserUsecase')),
     __param(1, (0, common_1.Inject)('RegisterUserParamConverter')),

@@ -5,6 +5,7 @@ import {    Body,
             Logger, 
             Param, 
             Post, 
+            UseGuards, 
             ValidationPipe} from "@nestjs/common";
 import { CategoryDTO } from "@src/application/in/dto/CategoryDTO";
 import { CategoryUsecase } from "@src/application/in/usecase/CategoryUsecase";
@@ -13,7 +14,10 @@ import { CategoryIdSearchParam } from "../param/CategoryIdSearchParam";
 import { RegisterProductParam } from "../param/RegisterProductParam";
 import { ProductDTO } from "@src/application/in/dto/ProductDTO";
 import { Converter } from "@src/shared/adapter/Converter";
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { AuthGuard } from "@nestjs/passport";
+import { RolesGuard } from "./auth/RolesGuard";
+import { Roles } from "./auth/roles.decorator";
 
 /**
  * 新商品登録RESTAPIコントローラ
@@ -22,6 +26,7 @@ import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/s
  * @version 1.0.0
  */
 @ApiTags("商品登録") // Swagger のカテゴリ設定
+@ApiBearerAuth('access-token') // Swaggerの「Authorize」ボタンを有効にするため
 @Controller('products/register')
 export class ProductRegisterRESTController {
     private readonly logger = new Logger(ProductRegisterRESTController.name);
@@ -47,6 +52,9 @@ export class ProductRegisterRESTController {
      */
     @ApiOperation({ summary: "全ての商品カテゴリを取得", description: "登録可能な商品カテゴリ一覧を取得" })
     @ApiResponse({ status: 200, description: "成功", type: [CategoryDTO] })
+    @ApiForbiddenResponse({ description: "権限がありません（Userロールが必要です）" })
+    @UseGuards(AuthGuard('jwt'),RolesGuard) // ← JWT認証が必要に！
+    @Roles('User')
     @Get('categories')
     async getCategories(): Promise<CategoryDTO[]>{
         this.logger.log('すべての商品カテゴリを取得 開始');
@@ -62,6 +70,9 @@ export class ProductRegisterRESTController {
     @ApiParam({ name: "categoryId", required: true, description: "取得する商品カテゴリのId", example: "12345" })
     @ApiResponse({ status: 200, description: "成功", type: CategoryDTO })
     @ApiResponse({ status: 404, description: "カテゴリが見つからない" })
+    @ApiForbiddenResponse({ description: "権限がありません（Userロールが必要です）" })
+    @UseGuards(AuthGuard('jwt'), RolesGuard) // ← JWT認証が必要に！
+    @Roles('User')
     @Get(':categoryId')
     async getCategoryById(@Param() param: CategoryIdSearchParam): Promise<CategoryDTO> {
         this.logger.log(`受信した商品カテゴリId: ${param.categoryId} 開始`);
@@ -91,6 +102,9 @@ export class ProductRegisterRESTController {
     })
     @ApiResponse({ status: 201, description: "登録成功" })
     @ApiResponse({ status: 400, description: "バリデーションエラー" })
+    @ApiForbiddenResponse({ description: "権限がありません（Userロールが必要です）" })
+    @UseGuards(AuthGuard('jwt'), RolesGuard) // ← JWT認証が必要に！
+    @Roles('User')
     @Post()
     async registerProduct(
             @Body(new ValidationPipe({ transform: true })) param: RegisterProductParam): Promise<{ message: string }> {

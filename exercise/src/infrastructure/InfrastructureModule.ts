@@ -14,11 +14,14 @@ import { RoleModelRestorer } from "./typorm/adapter/RoleModelRestorer";
 import { RoleModel } from "./typorm/model/RoleModel";
 import { UserModel } from "./typorm/model/UserModel";
 import { UserRoleModel } from "./typorm/model/UserRoleModel";
-import { RefreshTokenModel } from "./typorm/model/RefreshTokenModel";
 import { UserModelConverter } from "./typorm/adapter/UserModelConverter";
 import { UserModelRestorer } from "./typorm/adapter/UserModelRestorer";
 import { RoleRepositoryImpl } from "./typorm/repository/RoleRepositoryImpl";
 import { UserRepositoryImpl } from "./typorm/repository/UserRepositoryImpl";
+import { RefreshTokenModelConverter } from "./typorm/adapter/RefreshTokenModelConverter";
+import { RefreshTokenModel } from "./typorm/model/RefreshTokenModel";
+import { RefreshTokenModelRestorer } from "./typorm/adapter/RefreshTokenModelRestorer";
+import { RefreshTokenRepositoryImpl } from "./typorm/repository/RefreshTokenRepositoryImpl";
 
 
 /**
@@ -136,20 +139,38 @@ import { UserRepositoryImpl } from "./typorm/repository/UserRepositoryImpl";
             provide:    'UserRepository'    ,
             useClass:   UserRepositoryImpl  ,
         },
+        // RefreshTokenをRefreshTokenModelに変換
+        {
+            provide:    'RefreshTokenModelConverter' ,
+            useClass:   RefreshTokenModelConverter  ,
+        },
+        // RefreshTokenModelからRefreshTokenエンティティを復元する
+        {
+            provide:    'RefreshTokenModelRestorer' ,
+            useClass:   RefreshTokenModelRestorer   ,
+        },
+        // リフレッシュトークンリポジトリ
+        {
+            provide:    'RefreshTokenRepository'    ,
+            useClass:   RefreshTokenRepositoryImpl  ,
+        },
     ],
     exports: [
-        'CategoryModelConverter',
-        'CategoryModelRestorer' ,
-        'ProductModelConverter' ,
-        'ProductModelRestorer'  ,
-        'CategoryRepository'    ,
-        'ProductRepository'     ,
-        'RoleModelConverter'    ,
-        'RoleModelRestorer'     ,
-        'UserModelConverter'    ,
-        'UserModelRestorer'     ,
-        'RoleRepository'        ,
-        'UserRepository'        ,
+        'CategoryModelConverter'        ,
+        'CategoryModelRestorer'         ,
+        'ProductModelConverter'         ,
+        'ProductModelRestorer'          ,
+        'CategoryRepository'            ,
+        'ProductRepository'             ,
+        'RoleModelConverter'            ,
+        'RoleModelRestorer'             ,
+        'UserModelConverter'            ,
+        'UserModelRestorer'             ,
+        'RoleRepository'                ,
+        'UserRepository'                ,
+        'RefreshTokenModelConverter'    ,
+        'RefreshTokenModelRestorer'     ,
+        'RefreshTokenRepository'        ,
     ],
 })
 export class InfrastructureModule {}

@@ -18,6 +18,7 @@ const RegisterUserController_1 = require("./rest/controller/auth/RegisterUserCon
 const RegisterUserParamToConverter_1 = require("./rest/adapter/RegisterUserParamToConverter");
 const AuthenticateParamConverter_1 = require("./rest/adapter/AuthenticateParamConverter");
 const AuthenticateController_1 = require("./rest/controller/auth/AuthenticateController");
+const RolesGuard_1 = require("./rest/controller/auth/RolesGuard");
 /**
  * インターフェイス層のモジュール定義
  * - 商品カテゴリサービス、商品サービスを登録
@@ -67,6 +68,7 @@ exports.InterfaceModule = InterfaceModule = __decorate([
                 provide: 'AuthenticateParamConverter',
                 useClass: AuthenticateParamConverter_1.AuthenticateParamConverter,
             },
+            RolesGuard_1.RolesGuard, // Roleを利用したGuardを追加 2025-03-28
         ],
         exports: [
             'RegisterProductParamConverter', // 商品登録パラメータ変換クラス

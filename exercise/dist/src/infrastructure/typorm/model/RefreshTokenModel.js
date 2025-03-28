@@ -13,10 +13,11 @@ exports.RefreshTokenModel = void 0;
 const typeorm_1 = require("typeorm");
 const UserModel_1 = require("./UserModel");
 /**
- * refresh_tokensテーブルにマッピングされるエンティティクラス
- * - 各ユーザーごとに複数のリフレッシュトークンを発行可能
- * @author Fullness,Inc.
- * @date 2025-03-21
+ * refresh_tokens テーブルに対応する TypeORM エンティティ
+ * - ユーザーごとのリフレッシュトークン情報を保持
+ * - JWTと併用するリフレッシュトークン戦略に基づく管理用
+ * @author Fullness
+ * @date 2025-03-28
  * @version 1.0.0
  */
 let RefreshTokenModel = class RefreshTokenModel {

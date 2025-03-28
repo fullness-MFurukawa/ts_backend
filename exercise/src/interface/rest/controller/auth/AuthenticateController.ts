@@ -4,6 +4,7 @@ import { AuthenticateUserUsecase } from "@src/application/in/usecase/Authenticat
 import { Converter } from "@src/shared/adapter/Converter";
 import { AuthenticateParam } from "../../param/AuthenticateParam";
 import { AuthenticateDTO } from "@src/application/in/dto/AuthenticateDTO";
+import { AuthenticateResultDTO } from "@src/application/in/dto/AuthenticateResultDTO";
 
 /**
  * 認証APIコントローラ
@@ -37,14 +38,18 @@ export class AuthenticateController {
     @UsePipes(new ValidationPipe({ transform: true }))
     @ApiOperation({ summary: 'ユーザーログイン（JWTトークンを取得）' })
     @ApiBody({ type: AuthenticateParam })
-    @ApiResponse({ status: 200, description: '認証成功。JWTトークンを返却します。', schema: {
-        example: {
-        access_token: 'eyJhbGciOiJIUzI1NiIsInR...'
-    }
-    }})
-    async login(@Body() param: AuthenticateParam): Promise<{ access_token: string }> {
+    @ApiResponse({
+        status: 200,
+        description: '認証成功。アクセストークンとリフレッシュトークンを返却します。',
+        schema: {
+            example: {
+                access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                refresh_token: '93d3f768-1d1e-4760-94a6-abc123456789'
+            }
+        }
+    })
+    async login(@Body() param: AuthenticateParam): Promise<AuthenticateResultDTO> {
         const dto = await this.paramConverter.convert(param);
-        const token = await this.authenticateUserUsecase.authenticate(dto);
-        return { access_token: token };
+        return await this.authenticateUserUsecase.authenticate(dto);
      }
 }
