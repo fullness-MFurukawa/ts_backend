@@ -7,6 +7,9 @@ import { AuthenticateDTO } from "@src/application/in/dto/AuthenticateDTO";
 import { AuthenticateResultDTO } from "@src/application/in/dto/AuthenticateResultDTO";
 import { LogoutUserUsecase } from "@src/application/in/usecase/LogoutUserUsecase";
 import { LogoutParam } from "../../param/LogoutParam";
+import { RefreshAccessTokenUsecase } from "@src/application/in/usecase/RefreshAccessTokenUsecase";
+import { RefreshTokenParam } from "../../param/RefreshTokenParam";
+import { LogoutDTO } from "@src/application/in/dto/LogoutDTO";
 
 /**
  * 認証APIコントローラ
@@ -22,6 +25,7 @@ export class AuthenticateController {
      * コンストラクタ
      * @param authenticateUserUsecase 認証ユースケース
      * @param logoutUserUsecase ログアウトユースケース
+     * @param refreshAccessTokenUsecase リフレッシュトークンからアクセストークンを再発行するユースケース
      * @param paramConverter AuthenticateParamをAuthenticateDTOに変換 
      */
     constructor(
@@ -29,8 +33,12 @@ export class AuthenticateController {
         private readonly authenticateUserUsecase: AuthenticateUserUsecase,
         @Inject('LogoutUserUsecase')
         private readonly logoutUserUsecase: LogoutUserUsecase, 
+        @Inject('RefreshAccessTokenUsecase') 
+        private readonly refreshAccessTokenUsecase: RefreshAccessTokenUsecase,
         @Inject('AuthenticateParamConverter')
         private readonly paramConverter: Converter<AuthenticateParam, AuthenticateDTO>,
+        @Inject('LogoutParamConverter')
+        private readonly logoutParamConverter: Converter<LogoutParam, LogoutDTO>,
     ) {}
 
     /**
@@ -67,6 +75,29 @@ export class AuthenticateController {
     @ApiResponse({ status: 404, description: 'リフレッシュトークンが存在しない場合のエラー。' })
     @ApiResponse({ status: 500, description: 'サーバー内部エラー。' })
     async logout(@Body() param: LogoutParam): Promise<void> {
-        await this.logoutUserUsecase.logout(param.refresh_token);
+        const dto = await this.logoutParamConverter.convert(param);
+        await this.logoutUserUsecase.logout(dto);
+    }
+
+    /**
+     * アクセストークン再発行（リフレッシュトークン使用）
+     */
+    @Post('refresh')
+    @HttpCode(HttpStatus.OK)
+    @UsePipes(new ValidationPipe({ transform: true }))
+    @ApiOperation({ summary: 'アクセストークン再発行', description: 'リフレッシュトークンを用いて新しいアクセストークンを取得します。' })
+    @ApiBody({ type: RefreshTokenParam })
+    @ApiResponse({
+        status: 200,
+        description: 'アクセストークン再発行成功',
+        schema: {
+            example: {
+                access_token: 'new.jwt.access.token'
+            }
+        }
+    })
+    async refresh(@Body() param: RefreshTokenParam): Promise<{ access_token: string }> {
+        const newToken = await this.refreshAccessTokenUsecase.refresh(param.refresh_token);
+        return { access_token: newToken };
     }
 }

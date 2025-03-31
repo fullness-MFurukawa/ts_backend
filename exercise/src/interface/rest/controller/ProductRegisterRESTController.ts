@@ -18,6 +18,7 @@ import { ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOperation, ApiParam, A
 import { AuthGuard } from "@nestjs/passport";
 import { RolesGuard } from "./auth/RolesGuard";
 import { Roles } from "./auth/roles.decorator";
+import { JwtBlacklistGuard } from "./auth/JwtBlacklistGuard";
 
 /**
  * 新商品登録RESTAPIコントローラ
@@ -53,7 +54,10 @@ export class ProductRegisterRESTController {
     @ApiOperation({ summary: "全ての商品カテゴリを取得", description: "登録可能な商品カテゴリ一覧を取得" })
     @ApiResponse({ status: 200, description: "成功", type: [CategoryDTO] })
     @ApiForbiddenResponse({ description: "権限がありません（Userロールが必要です）" })
-    @UseGuards(AuthGuard('jwt'),RolesGuard) // ← JWT認証が必要に！
+    //@UseGuards(AuthGuard('jwt'),RolesGuard) // ← JWT認証が必要に！
+    // 2025-03-28 RolesGuardを追加
+    // 2035-03-30 JWT認証ガード（ブラックリスト対応)
+    @UseGuards(AuthGuard('jwt'), RolesGuard, JwtBlacklistGuard)
     @Roles('User')
     @Get('categories')
     async getCategories(): Promise<CategoryDTO[]>{
@@ -71,7 +75,10 @@ export class ProductRegisterRESTController {
     @ApiResponse({ status: 200, description: "成功", type: CategoryDTO })
     @ApiResponse({ status: 404, description: "カテゴリが見つからない" })
     @ApiForbiddenResponse({ description: "権限がありません（Userロールが必要です）" })
-    @UseGuards(AuthGuard('jwt'), RolesGuard) // ← JWT認証が必要に！
+    //@UseGuards(AuthGuard('jwt'), RolesGuard) // ← JWT認証が必要に！
+    // 2025-03-28 RolesGuardを追加
+    // 2035-03-30 JWT認証ガード（ブラックリスト対応)
+    @UseGuards(AuthGuard('jwt'), RolesGuard, JwtBlacklistGuard)
     @Roles('User')
     @Get(':categoryId')
     async getCategoryById(@Param() param: CategoryIdSearchParam): Promise<CategoryDTO> {
@@ -103,7 +110,10 @@ export class ProductRegisterRESTController {
     @ApiResponse({ status: 201, description: "登録成功" })
     @ApiResponse({ status: 400, description: "バリデーションエラー" })
     @ApiForbiddenResponse({ description: "権限がありません（Userロールが必要です）" })
-    @UseGuards(AuthGuard('jwt'), RolesGuard) // ← JWT認証が必要に！
+    // @UseGuards(AuthGuard('jwt'), RolesGuard) // ← JWT認証が必要に！
+    // 2025-03-28 RolesGuardを追加
+    // 2035-03-30 JWT認証ガード（ブラックリスト対応)
+    @UseGuards(AuthGuard('jwt'), RolesGuard, JwtBlacklistGuard)
     @Roles('User')
     @Post()
     async registerProduct(

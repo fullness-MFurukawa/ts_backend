@@ -34,19 +34,21 @@ let LogoutUserInteractor = LogoutUserInteractor_1 = class LogoutUserInteractor {
      * コンストラクタ
      * @param entityManager TypeORMのEntityManager
      * @param refreshTokenRepository リフレッシュトークンリポジトリ
+     * @param blacklistedTokenRepository アクセストークンブラックリストの永続化リポジトリ
      */
-    constructor(entityManager, refreshTokenRepository) {
+    constructor(entityManager, refreshTokenRepository, blacklistedTokenRepository) {
         this.entityManager = entityManager;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.blacklistedTokenRepository = blacklistedTokenRepository;
         this.logger = new common_1.Logger(LogoutUserInteractor_1.name);
     }
     /**
      * リフレッシュトークンを無効化してログアウト処理を行う
      * @param refreshToken クライアントが保持するリフレッシュトークン（UUID形式の文字列）
      */
-    async logout(refreshToken) {
+    async logout(logoutDTO) {
         // UUID形式のチェックとオブジェクト生成（バリデーション含む）
-        const refreshTokenId = RefreshTokenId_1.RefreshTokenId.fromString(refreshToken);
+        const refreshTokenId = RefreshTokenId_1.RefreshTokenId.fromString(logoutDTO.refreshToken);
         await this.entityManager.transaction(async (manager) => {
             try {
                 // トークンの存在確認
@@ -59,6 +61,9 @@ let LogoutUserInteractor = LogoutUserInteractor_1 = class LogoutUserInteractor {
                     token.revoke(); // revoke日時を設定
                     await this.refreshTokenRepository.revoke(refreshTokenId, manager); // DB反映
                 }
+                // トークンをブラックリストに追加する 2025-03-30
+                await this.blacklistedTokenRepository
+                    .add(logoutDTO.accessToken, logoutDTO.expiresAt, manager);
             }
             catch (error) {
                 this.logger.error(`ログアウト処理中にエラーが発生しました: ${error}`, error.stack);
@@ -71,6 +76,7 @@ exports.LogoutUserInteractor = LogoutUserInteractor;
 exports.LogoutUserInteractor = LogoutUserInteractor = LogoutUserInteractor_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectEntityManager)()),
-    __param(1, (0, common_1.Inject)("RefreshTokenRepository")),
-    __metadata("design:paramtypes", [typeorm_2.EntityManager, Object])
+    __param(1, (0, common_1.Inject)('RefreshTokenRepository')),
+    __param(2, (0, common_1.Inject)('BlacklistedTokenRepository')),
+    __metadata("design:paramtypes", [typeorm_2.EntityManager, Object, Object])
 ], LogoutUserInteractor);

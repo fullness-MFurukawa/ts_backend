@@ -10,6 +10,8 @@ import { RegisterUserParamConverter } from "./rest/adapter/RegisterUserParamToCo
 import { AuthenticateParamConverter } from "./rest/adapter/AuthenticateParamConverter";
 import { AuthenticateController } from "./rest/controller/auth/AuthenticateController";
 import { RolesGuard } from "./rest/controller/auth/RolesGuard";
+import { JwtBlacklistGuard } from "./rest/controller/auth/JwtBlacklistGuard";
+import { LogoutParamConverter } from "./rest/adapter/LogoutParamConverter";
 
 /**
  * インターフェイス層のモジュール定義
@@ -56,13 +58,20 @@ import { RolesGuard } from "./rest/controller/auth/RolesGuard";
             provide:    'AuthenticateParamConverter' ,
             useClass:   AuthenticateParamConverter  ,
         },
+        // LogoutParamからLogoutDTOへの変換
+        {
+            provide:    'LogoutParamConverter' ,
+            useClass:   LogoutParamConverter  ,
+        },
         RolesGuard, // Roleを利用したGuardを追加 2025-03-28
+        JwtBlacklistGuard,// JWT認証ガード（ブラックリスト対応）2025-03-30
     ],
     exports:[
         'RegisterProductParamConverter' , // 商品登録パラメータ変換クラス
         'ModifyProductParamConverter'   , // 商品変更パラメータ変換クラス
         'RegisterUserParamConverter'    , // RegisterUserParamからUserDTOへの変換
         'AuthenticateParamConverter'    , // AuthenticateParamからAuthenticateDTOへの変換
+        'LogoutParamConverter'          , // LogoutParamからLogoutDTOへの変換
     ]
 })
 export class InterfaceModule {}

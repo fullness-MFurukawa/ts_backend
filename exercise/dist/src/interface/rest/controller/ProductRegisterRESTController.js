@@ -22,6 +22,7 @@ const swagger_1 = require("@nestjs/swagger");
 const passport_1 = require("@nestjs/passport");
 const RolesGuard_1 = require("./auth/RolesGuard");
 const roles_decorator_1 = require("./auth/roles.decorator");
+const JwtBlacklistGuard_1 = require("./auth/JwtBlacklistGuard");
 /**
  * 新商品登録RESTAPIコントローラ
  * @author Fullness,Inc.
@@ -80,9 +81,12 @@ exports.ProductRegisterRESTController = ProductRegisterRESTController;
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "全ての商品カテゴリを取得", description: "登録可能な商品カテゴリ一覧を取得" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "成功", type: [CategoryDTO_1.CategoryDTO] }),
-    (0, swagger_1.ApiForbiddenResponse)({ description: "権限がありません（Userロールが必要です）" }),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard) // ← JWT認証が必要に！
+    (0, swagger_1.ApiForbiddenResponse)({ description: "権限がありません（Userロールが必要です）" })
+    //@UseGuards(AuthGuard('jwt'),RolesGuard) // ← JWT認証が必要に！
+    // 2025-03-28 RolesGuardを追加
+    // 2035-03-30 JWT認証ガード（ブラックリスト対応)
     ,
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard, JwtBlacklistGuard_1.JwtBlacklistGuard),
     (0, roles_decorator_1.Roles)('User'),
     (0, common_1.Get)('categories'),
     __metadata("design:type", Function),
@@ -94,9 +98,12 @@ __decorate([
     (0, swagger_1.ApiParam)({ name: "categoryId", required: true, description: "取得する商品カテゴリのId", example: "12345" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "成功", type: CategoryDTO_1.CategoryDTO }),
     (0, swagger_1.ApiResponse)({ status: 404, description: "カテゴリが見つからない" }),
-    (0, swagger_1.ApiForbiddenResponse)({ description: "権限がありません（Userロールが必要です）" }),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard) // ← JWT認証が必要に！
+    (0, swagger_1.ApiForbiddenResponse)({ description: "権限がありません（Userロールが必要です）" })
+    //@UseGuards(AuthGuard('jwt'), RolesGuard) // ← JWT認証が必要に！
+    // 2025-03-28 RolesGuardを追加
+    // 2035-03-30 JWT認証ガード（ブラックリスト対応)
     ,
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard, JwtBlacklistGuard_1.JwtBlacklistGuard),
     (0, roles_decorator_1.Roles)('User'),
     (0, common_1.Get)(':categoryId'),
     __param(0, (0, common_1.Param)()),
@@ -122,9 +129,12 @@ __decorate([
     }),
     (0, swagger_1.ApiResponse)({ status: 201, description: "登録成功" }),
     (0, swagger_1.ApiResponse)({ status: 400, description: "バリデーションエラー" }),
-    (0, swagger_1.ApiForbiddenResponse)({ description: "権限がありません（Userロールが必要です）" }),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard) // ← JWT認証が必要に！
+    (0, swagger_1.ApiForbiddenResponse)({ description: "権限がありません（Userロールが必要です）" })
+    // @UseGuards(AuthGuard('jwt'), RolesGuard) // ← JWT認証が必要に！
+    // 2025-03-28 RolesGuardを追加
+    // 2035-03-30 JWT認証ガード（ブラックリスト対応)
     ,
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard, JwtBlacklistGuard_1.JwtBlacklistGuard),
     (0, roles_decorator_1.Roles)('User'),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)(new common_1.ValidationPipe({ transform: true }))),

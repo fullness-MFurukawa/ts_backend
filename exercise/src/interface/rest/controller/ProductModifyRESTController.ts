@@ -7,8 +7,8 @@ import { ModifyProductParam } from "../param/ModifyProductParam";
 import { ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
 import { RolesGuard } from "./auth/RolesGuard";
-import { Role } from "@src/application/domain/model/role/Role";
 import { Roles } from "./auth/roles.decorator";
+import { JwtBlacklistGuard } from "./auth/JwtBlacklistGuard";
 
 /**
  * 既存商品の変更RESTAPIコントローラ
@@ -18,6 +18,7 @@ import { Roles } from "./auth/roles.decorator";
  */
 @ApiTags("商品変更(商品名、単価)") // Swaggerのカテゴリ設定
 @ApiBearerAuth('access-token') // Swaggerの「Authorize」ボタンを有効にするため
+// @UseGuards(JwtBlacklistGuard)   // JWT認証ガード（ブラックリスト対応）2025-03-30
 @Controller('products/modify')
 export class ProductModifyRESTController {
     private readonly logger = new Logger(ProductModifyRESTController.name);
@@ -43,7 +44,9 @@ export class ProductModifyRESTController {
     @ApiResponse({ status: 200, description: "成功", type: ProductDTO })
     @ApiResponse({ status: 404, description: "商品が見つからない" })
     @ApiForbiddenResponse({ description: "権限がありません（Userロールが必要です）" })
-    @UseGuards(AuthGuard('jwt'),RolesGuard) // ← JWT認証が必要に！
+    // 2025-03-28 RolesGuardを追加
+    // 2035-03-30 JWT認証ガード（ブラックリスト対応)
+    @UseGuards(AuthGuard('jwt'), RolesGuard, JwtBlacklistGuard)
     @Roles('User')
     @Get(':productId')
     async getProduct(@Param() param: ProductIdSearchParam): Promise<ProductDTO> {
@@ -75,7 +78,10 @@ export class ProductModifyRESTController {
     @ApiResponse({ status: 200, description: "変更成功" })
     @ApiResponse({ status: 400, description: "バリデーションエラー" })
     @ApiForbiddenResponse({ description: "権限がありません（Userロールが必要です）" })
-    @UseGuards(AuthGuard('jwt'),RolesGuard) // ← JWT認証が必要に！
+    //@UseGuards(AuthGuard('jwt'),RolesGuard) // ← JWT認証が必要に！
+    // 2025-03-28 RolesGuardを追加
+    // 2035-03-30 JWT認証ガード（ブラックリスト対応)
+    @UseGuards(AuthGuard('jwt'), RolesGuard, JwtBlacklistGuard)
     @Roles('User')
     @Put()
     @HttpCode(HttpStatus.OK) // ステータスコードを200に設定

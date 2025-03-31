@@ -22,6 +22,8 @@ import { RefreshTokenModelConverter } from "./typorm/adapter/RefreshTokenModelCo
 import { RefreshTokenModel } from "./typorm/model/RefreshTokenModel";
 import { RefreshTokenModelRestorer } from "./typorm/adapter/RefreshTokenModelRestorer";
 import { RefreshTokenRepositoryImpl } from "./typorm/repository/RefreshTokenRepositoryImpl";
+import { BlacklistedTokenRepositoryImpl } from "./typorm/repository/BlacklistedTokenRepositoryImpl";
+import { BlacklistedTokenModel } from "./typorm/model/BlacklistedTokenModel";
 
 
 /**
@@ -59,7 +61,8 @@ import { RefreshTokenRepositoryImpl } from "./typorm/repository/RefreshTokenRepo
                     RoleModel,
                     UserModel,
                     UserRoleModel,
-                    RefreshTokenModel
+                    RefreshTokenModel,
+                    BlacklistedTokenModel,
                 ],
                 synchronize: configService.get<boolean>("DB_SYNCHRONIZE"),// 本番環境では必ずfalseに設定
                 logging: configService.get<boolean>("DB_LOGGING"),// SQLログの出力を有効化
@@ -72,7 +75,8 @@ import { RefreshTokenRepositoryImpl } from "./typorm/repository/RefreshTokenRepo
             RoleModel,
             UserModel,
             UserRoleModel,
-            RefreshTokenModel
+            RefreshTokenModel,
+            BlacklistedTokenModel,
         ]),
     ],
     providers: [
@@ -154,6 +158,11 @@ import { RefreshTokenRepositoryImpl } from "./typorm/repository/RefreshTokenRepo
             provide:    'RefreshTokenRepository'    ,
             useClass:   RefreshTokenRepositoryImpl  ,
         },
+        // アクセストークンブラックリストの永続化リポジトリ
+        {
+            provide:    'BlacklistedTokenRepository'    ,
+            useClass:   BlacklistedTokenRepositoryImpl  ,
+        },
     ],
     exports: [
         'CategoryModelConverter'        ,
@@ -171,6 +180,7 @@ import { RefreshTokenRepositoryImpl } from "./typorm/repository/RefreshTokenRepo
         'RefreshTokenModelConverter'    ,
         'RefreshTokenModelRestorer'     ,
         'RefreshTokenRepository'        ,
+        'BlacklistedTokenRepository'    ,
     ],
 })
 export class InfrastructureModule {}

@@ -19,6 +19,8 @@ const RegisterUserParamToConverter_1 = require("./rest/adapter/RegisterUserParam
 const AuthenticateParamConverter_1 = require("./rest/adapter/AuthenticateParamConverter");
 const AuthenticateController_1 = require("./rest/controller/auth/AuthenticateController");
 const RolesGuard_1 = require("./rest/controller/auth/RolesGuard");
+const JwtBlacklistGuard_1 = require("./rest/controller/auth/JwtBlacklistGuard");
+const LogoutParamConverter_1 = require("./rest/adapter/LogoutParamConverter");
 /**
  * インターフェイス層のモジュール定義
  * - 商品カテゴリサービス、商品サービスを登録
@@ -68,13 +70,20 @@ exports.InterfaceModule = InterfaceModule = __decorate([
                 provide: 'AuthenticateParamConverter',
                 useClass: AuthenticateParamConverter_1.AuthenticateParamConverter,
             },
+            // LogoutParamからLogoutDTOへの変換
+            {
+                provide: 'LogoutParamConverter',
+                useClass: LogoutParamConverter_1.LogoutParamConverter,
+            },
             RolesGuard_1.RolesGuard, // Roleを利用したGuardを追加 2025-03-28
+            JwtBlacklistGuard_1.JwtBlacklistGuard, // JWT認証ガード（ブラックリスト対応）2025-03-30
         ],
         exports: [
             'RegisterProductParamConverter', // 商品登録パラメータ変換クラス
             'ModifyProductParamConverter', // 商品変更パラメータ変換クラス
             'RegisterUserParamConverter', // RegisterUserParamからUserDTOへの変換
             'AuthenticateParamConverter', // AuthenticateParamからAuthenticateDTOへの変換
+            'LogoutParamConverter', // LogoutParamからLogoutDTOへの変換
         ]
     })
 ], InterfaceModule);

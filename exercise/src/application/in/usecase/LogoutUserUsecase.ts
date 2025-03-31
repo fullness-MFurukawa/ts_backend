@@ -1,3 +1,5 @@
+import { LogoutDTO } from "../dto/LogoutDTO";
+
 /**
  * ユーザーのログアウト処理を行うユースケースインターフェイス
  * - クライアントから送られたリフレッシュトークンを無効化する責務を担う
@@ -14,5 +16,5 @@ export interface LogoutUserUsecase {
      * @param refreshToken クライアントが保持するリフレッシュトークン（UUID形式の文字列）
      * @throws DomainException 不正なトークン形式などバリデーションエラー時
      */
-    logout(refreshToken: string): Promise<void>;
+    logout(logoutDTO: LogoutDTO): Promise<void>;
 }

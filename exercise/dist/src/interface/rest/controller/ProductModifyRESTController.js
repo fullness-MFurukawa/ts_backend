@@ -22,6 +22,7 @@ const swagger_1 = require("@nestjs/swagger");
 const passport_1 = require("@nestjs/passport");
 const RolesGuard_1 = require("./auth/RolesGuard");
 const roles_decorator_1 = require("./auth/roles.decorator");
+const JwtBlacklistGuard_1 = require("./auth/JwtBlacklistGuard");
 /**
  * 既存商品の変更RESTAPIコントローラ
  * @author Fullness,Inc.
@@ -70,9 +71,11 @@ __decorate([
     (0, swagger_1.ApiParam)({ name: "productId", description: "取得する商品のId", example: "550e8400-e29b-41d4-a716-446655440000" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "成功", type: ProductDTO_1.ProductDTO }),
     (0, swagger_1.ApiResponse)({ status: 404, description: "商品が見つからない" }),
-    (0, swagger_1.ApiForbiddenResponse)({ description: "権限がありません（Userロールが必要です）" }),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard) // ← JWT認証が必要に！
+    (0, swagger_1.ApiForbiddenResponse)({ description: "権限がありません（Userロールが必要です）" })
+    // 2025-03-28 RolesGuardを追加
+    // 2035-03-30 JWT認証ガード（ブラックリスト対応)
     ,
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard, JwtBlacklistGuard_1.JwtBlacklistGuard),
     (0, roles_decorator_1.Roles)('User'),
     (0, common_1.Get)(':productId'),
     __param(0, (0, common_1.Param)()),
@@ -98,9 +101,12 @@ __decorate([
     }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "変更成功" }),
     (0, swagger_1.ApiResponse)({ status: 400, description: "バリデーションエラー" }),
-    (0, swagger_1.ApiForbiddenResponse)({ description: "権限がありません（Userロールが必要です）" }),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard) // ← JWT認証が必要に！
+    (0, swagger_1.ApiForbiddenResponse)({ description: "権限がありません（Userロールが必要です）" })
+    //@UseGuards(AuthGuard('jwt'),RolesGuard) // ← JWT認証が必要に！
+    // 2025-03-28 RolesGuardを追加
+    // 2035-03-30 JWT認証ガード（ブラックリスト対応)
     ,
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard, JwtBlacklistGuard_1.JwtBlacklistGuard),
     (0, roles_decorator_1.Roles)('User'),
     (0, common_1.Put)(),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK) // ステータスコードを200に設定
@@ -114,6 +120,7 @@ exports.ProductModifyRESTController = ProductModifyRESTController = ProductModif
     (0, swagger_1.ApiTags)("商品変更(商品名、単価)") // Swaggerのカテゴリ設定
     ,
     (0, swagger_1.ApiBearerAuth)('access-token') // Swaggerの「Authorize」ボタンを有効にするため
+    // @UseGuards(JwtBlacklistGuard)   // JWT認証ガード（ブラックリスト対応）2025-03-30
     ,
     (0, common_1.Controller)('products/modify'),
     __param(0, (0, common_1.Inject)('ProductUsecase')),

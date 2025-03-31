@@ -8,6 +8,7 @@ import { ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOperation, ApiResponse
 import { AuthGuard } from "@nestjs/passport";
 import { RolesGuard } from "./RolesGuard";
 import { Roles } from "./roles.decorator";
+import { JwtBlacklistGuard } from "./JwtBlacklistGuard";
 
 
 /**
@@ -17,7 +18,8 @@ import { Roles } from "./roles.decorator";
  * @version 1.0.0
  */
 @ApiTags('ユーザー登録')
-@ApiBearerAuth('access-token') // Swaggerの「Authorize」ボタンを有効にするため
+@ApiBearerAuth('access-token')  // Swaggerの「Authorize」ボタンを有効にするため
+//@UseGuards(JwtBlacklistGuard)   // JWT認証ガード（ブラックリスト対応）2025-03-30
 @Controller('users/register')
 export class RegisterUserController {
     /**
@@ -40,7 +42,10 @@ export class RegisterUserController {
     @ApiOperation({ summary: '利用可能なロール一覧の取得' })
     @ApiResponse({ status: 200, description: 'ロール一覧を取得しました。', type: [RoleDTO] })
     @ApiForbiddenResponse({ description: '権限がありません（Adminロールが必要です）' })
-    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    //@UseGuards(AuthGuard('jwt'), RolesGuard)
+    // 2025-03-28 RolesGuardを追加
+    // 2035-03-30 JWT認証ガード（ブラックリスト対応)
+    @UseGuards(AuthGuard('jwt'), RolesGuard, JwtBlacklistGuard)
     @Roles('Admin')
     async getAvailableRoles(): Promise<RoleDTO[]> {
         return await this.registerUserUsecase.fetchRoles();
@@ -57,7 +62,10 @@ export class RegisterUserController {
     @ApiBody({ type: RegisterUserParam })
     @ApiResponse({ status: 201, description: 'ユーザーが正常に登録されました。' })
     @ApiForbiddenResponse({ description: '権限がありません（Adminロールが必要です）' })
-    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    //@UseGuards(AuthGuard('jwt'), RolesGuard)
+    // 2025-03-28 RolesGuardを追加
+    // 2035-03-30 JWT認証ガード（ブラックリスト対応)
+    @UseGuards(AuthGuard('jwt'), RolesGuard, JwtBlacklistGuard)
     @Roles('Admin')
     async registerUser(@Body() param: RegisterUserParam): Promise<void> {
         const dto = await this.paramConverter.convert(param);

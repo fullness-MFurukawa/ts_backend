@@ -31,6 +31,8 @@ const RefreshTokenModelConverter_1 = require("./typorm/adapter/RefreshTokenModel
 const RefreshTokenModel_1 = require("./typorm/model/RefreshTokenModel");
 const RefreshTokenModelRestorer_1 = require("./typorm/adapter/RefreshTokenModelRestorer");
 const RefreshTokenRepositoryImpl_1 = require("./typorm/repository/RefreshTokenRepositoryImpl");
+const BlacklistedTokenRepositoryImpl_1 = require("./typorm/repository/BlacklistedTokenRepositoryImpl");
+const BlacklistedTokenModel_1 = require("./typorm/model/BlacklistedTokenModel");
 /**
  * インフラストラクチャ層のモジュール定義
  * - データベース接続情報
@@ -69,7 +71,8 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
                         RoleModel_1.RoleModel,
                         UserModel_1.UserModel,
                         UserRoleModel_1.UserRoleModel,
-                        RefreshTokenModel_1.RefreshTokenModel
+                        RefreshTokenModel_1.RefreshTokenModel,
+                        BlacklistedTokenModel_1.BlacklistedTokenModel,
                     ],
                     synchronize: configService.get("DB_SYNCHRONIZE"), // 本番環境では必ずfalseに設定
                     logging: configService.get("DB_LOGGING"), // SQLログの出力を有効化
@@ -82,7 +85,8 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
                 RoleModel_1.RoleModel,
                 UserModel_1.UserModel,
                 UserRoleModel_1.UserRoleModel,
-                RefreshTokenModel_1.RefreshTokenModel
+                RefreshTokenModel_1.RefreshTokenModel,
+                BlacklistedTokenModel_1.BlacklistedTokenModel,
             ]),
         ],
         providers: [
@@ -164,6 +168,11 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
                 provide: 'RefreshTokenRepository',
                 useClass: RefreshTokenRepositoryImpl_1.RefreshTokenRepositoryImpl,
             },
+            // アクセストークンブラックリストの永続化リポジトリ
+            {
+                provide: 'BlacklistedTokenRepository',
+                useClass: BlacklistedTokenRepositoryImpl_1.BlacklistedTokenRepositoryImpl,
+            },
         ],
         exports: [
             'CategoryModelConverter',
@@ -181,6 +190,7 @@ exports.InfrastructureModule = InfrastructureModule = __decorate([
             'RefreshTokenModelConverter',
             'RefreshTokenModelRestorer',
             'RefreshTokenRepository',
+            'BlacklistedTokenRepository',
         ],
     })
 ], InfrastructureModule);

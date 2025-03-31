@@ -6,6 +6,7 @@ import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@ne
 import { AuthGuard } from "@nestjs/passport";
 import { RolesGuard } from "./auth/RolesGuard";
 import { Roles } from "./auth/roles.decorator";
+import { JwtBlacklistGuard } from "./auth/JwtBlacklistGuard";
 
 /**
  * 商品キーワード検索RESTAPIコントローラ
@@ -34,7 +35,10 @@ export class ProductKeywordSearchRESTController {
     @ApiQuery({ name: "keyword", required: true, description: "検索する商品キーワード" })
     @ApiResponse({ status: 200, description: "成功", type: [ProductDTO] })
     @ApiResponse({ status: 404, description: "商品が見つからない" })
-    @UseGuards(AuthGuard('jwt'),RolesGuard) // 2025-03-28 RolesGuardを追加
+    // @UseGuards(AuthGuard('jwt'),RolesGuard) // 2025-03-28 RolesGuardを追加
+    // 2025-03-28 RolesGuardを追加
+    // 2035-03-30 JWT認証ガード（ブラックリスト対応)
+    @UseGuards(AuthGuard('jwt'), RolesGuard, JwtBlacklistGuard)
     @Roles('Guest') // Guestロールを持っていればアクセス可能
     @Get()
     async searchByKeyword(

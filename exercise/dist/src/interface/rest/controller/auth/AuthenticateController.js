@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const AuthenticateParam_1 = require("../../param/AuthenticateParam");
 const LogoutParam_1 = require("../../param/LogoutParam");
+const RefreshTokenParam_1 = require("../../param/RefreshTokenParam");
 /**
  * 認証APIコントローラ
  * - ユーザーのログイン処理を提供する
@@ -29,12 +30,15 @@ let AuthenticateController = class AuthenticateController {
      * コンストラクタ
      * @param authenticateUserUsecase 認証ユースケース
      * @param logoutUserUsecase ログアウトユースケース
+     * @param refreshAccessTokenUsecase リフレッシュトークンからアクセストークンを再発行するユースケース
      * @param paramConverter AuthenticateParamをAuthenticateDTOに変換
      */
-    constructor(authenticateUserUsecase, logoutUserUsecase, paramConverter) {
+    constructor(authenticateUserUsecase, logoutUserUsecase, refreshAccessTokenUsecase, paramConverter, logoutParamConverter) {
         this.authenticateUserUsecase = authenticateUserUsecase;
         this.logoutUserUsecase = logoutUserUsecase;
+        this.refreshAccessTokenUsecase = refreshAccessTokenUsecase;
         this.paramConverter = paramConverter;
+        this.logoutParamConverter = logoutParamConverter;
     }
     /**
      * ログイン処理
@@ -46,7 +50,15 @@ let AuthenticateController = class AuthenticateController {
         return await this.authenticateUserUsecase.authenticate(dto);
     }
     async logout(param) {
-        await this.logoutUserUsecase.logout(param.refresh_token);
+        const dto = await this.logoutParamConverter.convert(param);
+        await this.logoutUserUsecase.logout(dto);
+    }
+    /**
+     * アクセストークン再発行（リフレッシュトークン使用）
+     */
+    async refresh(param) {
+        const newToken = await this.refreshAccessTokenUsecase.refresh(param.refresh_token);
+        return { access_token: newToken };
     }
 };
 exports.AuthenticateController = AuthenticateController;
@@ -85,11 +97,33 @@ __decorate([
     __metadata("design:paramtypes", [LogoutParam_1.LogoutParam]),
     __metadata("design:returntype", Promise)
 ], AuthenticateController.prototype, "logout", null);
+__decorate([
+    (0, common_1.Post)('refresh'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ transform: true })),
+    (0, swagger_1.ApiOperation)({ summary: 'アクセストークン再発行', description: 'リフレッシュトークンを用いて新しいアクセストークンを取得します。' }),
+    (0, swagger_1.ApiBody)({ type: RefreshTokenParam_1.RefreshTokenParam }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'アクセストークン再発行成功',
+        schema: {
+            example: {
+                access_token: 'new.jwt.access.token'
+            }
+        }
+    }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [RefreshTokenParam_1.RefreshTokenParam]),
+    __metadata("design:returntype", Promise)
+], AuthenticateController.prototype, "refresh", null);
 exports.AuthenticateController = AuthenticateController = __decorate([
     (0, swagger_1.ApiTags)('認証'),
     (0, common_1.Controller)('auth'),
     __param(0, (0, common_1.Inject)('AuthenticateUserUsecase')),
     __param(1, (0, common_1.Inject)('LogoutUserUsecase')),
-    __param(2, (0, common_1.Inject)('AuthenticateParamConverter')),
-    __metadata("design:paramtypes", [Object, Object, Object])
+    __param(2, (0, common_1.Inject)('RefreshAccessTokenUsecase')),
+    __param(3, (0, common_1.Inject)('AuthenticateParamConverter')),
+    __param(4, (0, common_1.Inject)('LogoutParamConverter')),
+    __metadata("design:paramtypes", [Object, Object, Object, Object, Object])
 ], AuthenticateController);

@@ -23,6 +23,8 @@ const AuthenticateUserInteractor_1 = require("./in/service/AuthenticateUserInter
 const jwt_1 = require("@nestjs/jwt");
 const jwt_strategy_1 = require("../interface/rest/controller/auth/jwt.strategy");
 const LogoutUserInteractor_1 = require("./in/service/LogoutUserInteractor");
+const RefreshAccessTokenInteractor_1 = require("./in/service/RefreshAccessTokenInteractor");
+const BlacklistAccessTokenInteractor_1 = require("./in/service/BlacklistAccessTokenInteractor");
 /**
  * サービス層のモジュール定義
  * - 商品カテゴリサービス、商品サービスを登録
@@ -105,6 +107,16 @@ exports.ApplicationModule = ApplicationModule = __decorate([
                 provide: 'LogoutUserUsecase',
                 useClass: LogoutUserInteractor_1.LogoutUserInteractor,
             },
+            // リフレッシュトークンからアクセストークンを再発行するユースケース
+            {
+                provide: 'RefreshAccessTokenUsecase',
+                useClass: RefreshAccessTokenInteractor_1.RefreshAccessTokenInteractor,
+            },
+            // アクセストークンをブラックリストに追加するユースケース
+            {
+                provide: 'BlacklistAccessTokenUsecase',
+                useClass: BlacklistAccessTokenInteractor_1.BlacklistAccessTokenInteractor,
+            },
             jwt_strategy_1.JwtStrategy, //
         ],
         exports: [
@@ -120,6 +132,8 @@ exports.ApplicationModule = ApplicationModule = __decorate([
             'RegisterUserUsecase',
             'AuthenticateUserUsecase',
             'LogoutUserUsecase',
+            'RefreshAccessTokenUsecase',
+            'BlacklistAccessTokenUsecase',
         ]
     })
 ], ApplicationModule);

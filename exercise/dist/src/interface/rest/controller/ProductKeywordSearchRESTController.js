@@ -21,6 +21,7 @@ const swagger_1 = require("@nestjs/swagger");
 const passport_1 = require("@nestjs/passport");
 const RolesGuard_1 = require("./auth/RolesGuard");
 const roles_decorator_1 = require("./auth/roles.decorator");
+const JwtBlacklistGuard_1 = require("./auth/JwtBlacklistGuard");
 /**
  * 商品キーワード検索RESTAPIコントローラ
  * @author Fullness,Inc.
@@ -51,9 +52,12 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: "商品キーワード検索", description: "キーワードを含む商品を検索します。" }),
     (0, swagger_1.ApiQuery)({ name: "keyword", required: true, description: "検索する商品キーワード" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "成功", type: [ProductDTO_1.ProductDTO] }),
-    (0, swagger_1.ApiResponse)({ status: 404, description: "商品が見つからない" }),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard) // 2025-03-28 RolesGuardを追加
+    (0, swagger_1.ApiResponse)({ status: 404, description: "商品が見つからない" })
+    // @UseGuards(AuthGuard('jwt'),RolesGuard) // 2025-03-28 RolesGuardを追加
+    // 2025-03-28 RolesGuardを追加
+    // 2035-03-30 JWT認証ガード（ブラックリスト対応)
     ,
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), RolesGuard_1.RolesGuard, JwtBlacklistGuard_1.JwtBlacklistGuard),
     (0, roles_decorator_1.Roles)('Guest') // Guestロールを持っていればアクセス可能
     ,
     (0, common_1.Get)(),
