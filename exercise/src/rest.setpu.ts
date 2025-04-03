@@ -42,7 +42,7 @@ export async function setupRestServer(app: INestApplication): Promise<void> {
 
         // Swagger(OpenAPI)の設定
         const config = new DocumentBuilder()
-            .setTitle("マイクロサービスハンズオン:TypeScript編 商品管理API")  // APIのタイトル
+            .setTitle("マイクロサービス[TypeScriptハンズオン]")  // APIのタイトル
             .setDescription("商品管理APIのエンドポイント一覧") // 説明
             .setVersion("1.0.0") // バージョン
             .addTag("商品管理機能と認証機能") // タグ（カテゴリ分け用）
@@ -54,7 +54,7 @@ export async function setupRestServer(app: INestApplication): Promise<void> {
                   name: 'Authorization',
                   in: 'header',
                 },
-                'access-token' // ← この名前は任意ですがコントローラ側と一致させたい場合は指定
+                'access-token' // JWTアクセストークンの名称
               )
             .build();
         const document = SwaggerModule.createDocument(app, config);
